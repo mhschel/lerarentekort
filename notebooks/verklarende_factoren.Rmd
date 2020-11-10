@@ -1,0 +1,52 @@
+---
+title: "Verklarende factoren "
+output: html_notebook
+---
+
+# Hoe kunnen lokale verschillen worden verklaard?
+In deze sectie onderzoeken we hoe de grote lokale verschillen in leerling-leraar ratios kunnen worden verklaard. De meest voor de hand liggende verklaring is demografie: het aantal huishoudens met schoolgaande kinderen verandert op verschillende snelheden. Het CBS registreert het aantal huishoudens met kinderen voor gemeentes met 100.000 inwoners of meer. We berekenen het mutatie van het aantal huishoudens met kinderen in deze gemeentes.
+
+```{r}
+library(cbsodataR)
+bevolking_data = cbs_get_data('37230ned', select = c('BevolkingAanHetBeginVanDePeriode_1', 'RegioS', 'Perioden')) %>%
+  mutate(jaar = substr(Perioden, 0, 4)) %>%
+  filter(jaar %in% c("2009", "2019") & substr(RegioS, 0, 2) == "GM" & grepl("JJ00", Perioden)) %>%
+  group_by(RegioS) %>%
+  summarise(
+    bevolking_delta = BevolkingAanHetBeginVanDePeriode_1[2] - BevolkingAanHetBeginVanDePeriode_1[1],
+    bevolking_delta_perc = (BevolkingAanHetBeginVanDePeriode_1[2] - BevolkingAanHetBeginVanDePeriode_1[1]) / BevolkingAanHetBeginVanDePeriode_1[1],
+    )
+
+bevolking_data = data %>% 
+  left_join(bevolking_data, by = c("statcode" = "RegioS"))
+
+ggplot(bevolking_data) +
+  geom_sf(aes(fill = bevolking_delta)) +
+  labs(title = "Verandering bevolking 2009-2019 (per gemeente)", fill = "") +
+  scale_fill_continuous(type = "viridis") +
+  theme_void()
+
+ggplot(bevolking_data) +
+  geom_sf(aes(fill = change_avg_school_size)) +
+  labs(title = "Verandering schoolgrootte 2009-2019 (per gemeente)", fill = "") +
+  scale_fill_continuous(type = "viridis") +
+  theme_void()
+
+plot(data = bevolking_data %>% filter(bevolking_delta_perc < 0.2), change_ll_lr_ratio ~ change_avg_school_size)
+abline(lm(data = bevolking_data %>% filter(bevolking_delta_perc < 0.2), change_ll_lr_ratio ~ change_avg_school_size))
+```
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
