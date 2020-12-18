@@ -68,8 +68,32 @@ In deze analyse focussen we op het PO. We selecteren dus alle reguliere basissch
 
 ```{r}
 baos = functiemix_school %>% filter(schooltype == 'bao' & ll_lr_ratio > 5 & ll_lr_ratio < 50)
-baos_2019 = baos %>% filter(jaar == 2018)
+baos_2019 = baos %>% filter(jaar == 2019)
 ggplot(baos_2019, aes(x = ll_lr_ratio)) + geom_histogram() + theme_minimal()
+```
+
+```{r}
+baos_jaar = functiemix_school %>% filter(schooltype == 'bao' & ll_lr_ratio > 5 & ll_lr_ratio < 50) %>%
+  group_by(jaar) %>% 
+  summarise(
+    nat_ll_lr_ratio = sum(leerlingen) / sum(onderwijzers), 
+    leerlingen = sum(leerlingen), 
+    onderwijzers = sum(onderwijzers), 
+    managers = sum(managers),
+    ondersteunend_personeel = sum(ondersteunend_personeel),
+    schools = n(),
+    medewerkers = sum(medewerkers),
+    medewerkers_op_salaris = sum(medewerkers_op_salaris)
+    )
+
+ggplot(baos_jaar, aes(x = jaar, y = nat_ll_lr_ratio)) + geom_line() + theme_minimal() + coord_cartesian(ylim = c(16, 20))
+ggplot(baos_jaar, aes(x = jaar, y = leerlingen)) + geom_line() + theme_minimal()
+ggplot(baos_jaar, aes(x = jaar, y = schools)) + geom_line() + theme_minimal() + coord_cartesian(ylim = c(6000, 6500))
+ggplot(baos_jaar, aes(x = jaar, y = leerlingen / managers)) + geom_line() + theme_minimal()
+ggplot(baos_jaar, aes(x = jaar, y = leerlingen / ondersteunend_personeel)) + geom_line() + theme_minimal()
+ggplot(baos_jaar, aes(x = jaar, y = medewerkers / leerlingen)) + geom_line() + theme_minimal()
+ggplot(baos_jaar, aes(x = jaar, y = medewerkers_op_salaris / medewerkers)) + geom_line() + theme_minimal()
+ggplot(baos_jaar, aes(x = jaar, y = leerlingen / medewerkers)) + geom_line() + theme_minimal()
 ```
 
 # Hoe varieert de leerling/leraar ratio tussen gemeenten?
@@ -98,6 +122,32 @@ data %>%
   scale_fill_viridis_c() +
   labs(title = "Gemiddelde Leerling/Leraar Ratio (per gemeente)", fill = "") +
   theme_void()
+
+ggplot(data) +
+  geom_sf(aes(fill = ll_manager_ratio_cut)) +
+  labs(title = "ll_lr_ratio_cut", fill = "") +
+  scale_fill_brewer(palette = 'Reds') +
+  theme_void()
+
+ggplot(data) +
+  geom_sf(aes(fill = ll_support_ratio_cut)) +
+  labs(title = "ll_lr_ratio_cut", fill = "") +
+  scale_fill_brewer(palette = 'Reds') +
+  theme_void()
+
+data %>%
+  ggplot() +
+  geom_sf(aes(fill = ntile(ll_manager_ratio, 100))) +
+  scale_fill_viridis_c() +
+  labs(title = "Gemiddelde Leerling/Directeur Ratio (per gemeente)", fill = "") +
+  theme_void()
+
+data %>%
+  ggplot() +
+  geom_sf(aes(fill = ntile(ll_support_ratio, 100))) +
+  scale_fill_viridis_c() +
+  labs(title = "Gemiddelde Leerling/Ondersteunend Personeel Ratio (per gemeente)", fill = "") +
+  theme_void()
 ```
 
 Op bovenstaande kaartje zien we de variantie per gemeente. De schaal wordt echter gedomnieerd door uitschieters: gemeentes met zeer grote en kleine groepen. Daarnaast kan het gemeentelijke gemiddelde gedreven worden door uitschieters. Tenslotte zijn we meer geinteresseerd in scholen met hoge ratios dan lage ratios. Daarom maken we een kaart van Nederland waarop de fractie van scholen met ratio's boven het landelijke gemiddelde per gemeente zichbaar is.
@@ -105,7 +155,7 @@ Op bovenstaande kaartje zien we de variantie per gemeente. De schaal wordt echte
 ```{r}
 ggplot(data) +
   geom_sf(aes(fill = perc_high_ll_lr_ratio)) +
-  labs(title = "Percentage scholen met bovengemiddelde leerling/leraar ratios (per gemeente)", fill = "") +
+  labs(title = "% scholen met bovengemiddelde leerling/leraar ratios (per gemeente)") +
   scale_fill_continuous(type = "viridis") +
   theme_void()
 ```
@@ -232,6 +282,7 @@ We sluiten de analyse af met een vraag: als we leraren in het PO opnieuw zouden 
 Uit de onderstaande analyse blijkt dat als 1.664 FTE zou verhuizen naar een gemeente met een relatief tekort, alle verschillen tussen gemeentes zouden worden verrekend. Op ruim 77.000 FTE PO docenten is dat 2% van de populatie van onderwijzers.
 
 ```{r}
+landelijk_gemiddelde = sum(mean_baos_2019$tot_leerlingen) / sum(mean_baos_2019$tot_onderwijzers)
 herverdeling_data = mean_baos_2019 %>% mutate(
   gem_ll_lr_ratio = tot_leerlingen / tot_onderwijzers,
   diff_landelijk = gem_ll_lr_ratio - landelijk_gemiddelde,
@@ -339,5 +390,11 @@ data %>% as_tibble() %>%
 data %>% as_tibble() %>% 
   select(statnaam, fte_verplaatsing, perc_fte_verplaatsing) %>% 
   arrange(desc(perc_fte_verplaatsing))
+
+```
+
+```{r}
+baos_2018 = baos %>% filter(jaar == 2018 & perc_gewicht > 0)
+ggplot(baos_2018, aes(x = perc_gewicht, y = ll_lr_ratio)) + geom_point() + stat_smooth(method='lm') + theme_minimal()
 
 ```

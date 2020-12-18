@@ -25,13 +25,13 @@ We beginnen met het inladen van de data. We gebruiken voornamelijk de tidyverse 
 
 ```{r echo=TRUE, fig.height=6, fig.width=6, message=FALSE, warning=FALSE}
 library(tidyverse)
-adres_vo = read_csv('../data/instellingenvo.csv') %>% select(
+adres_vo = read_csv('../data_files/instellingenvo.csv') %>% select(
   brin = `BRIN NUMMER`,
   pc6 = POSTCODE,
   statcode_muni = GEMEENTENUMMER,
   statcode_corop = `COROPGEBIED CODE`
 )
-functiemix_school = read_csv('../data/functiemix-instellingen.csv') %>% select(
+functiemix_school = read_csv('../data_files/functiemix-instellingen.csv') %>% select(
   jaar = JAAR,
   brin = BRIN_NUMMER,
   naam_school = INSTELLINGSNAAM,
@@ -78,12 +78,14 @@ vos_by_type = vos %>% group_by(schooltype, jaar) %>%
     tot_leerlingen = sum(leerlingen),
     tot_onderwijzers = sum(onderwijzers),
     tot_managers = sum(managers),
-    gem_ll_lr_ratio = mean(ll_lr_ratio)
+    gem_ll_lr_ratio = mean(ll_lr_ratio, na.rm = T)
   )
 
 ggplot(vos_by_type, aes(x = jaar, y = tot_leerlingen, group = schooltype, color = schooltype, fill = schooltype)) + geom_line()  +  theme_minimal()
 ggplot(vos_by_type, aes(x = jaar, y = tot_onderwijzers, group = schooltype, color = schooltype, fill = schooltype)) + geom_line()  +  theme_minimal()
-ggplot(vos_by_type, aes(x = jaar, y = gem_ll_lr_ratio, group = schooltype, color = schooltype, fill = schooltype)) + geom_line()  +  theme_minimal()
+p = ggplot(vos_by_type, aes(x = jaar, y = gem_ll_lr_ratio, group = schooltype, color = schooltype, fill = schooltype)) + geom_line()  +  theme_minimal()
+
+ggsave('vo_tijdstrend.pdf', p, width = 7, height = 4)
 ```
 
 ```{r}
@@ -97,9 +99,10 @@ We berekenen voor iedere gemeente de gemiddelde leerling/leraar ratios voor alle
 ```{r}
 landelijk_gemiddelde = mean(vos_2019$ll_lr_ratio, na.rm = T)
 
+library(sf)
 gemeentegrenzen <- st_read("https://geodata.nationaalgeoregister.nl/cbsgebiedsindelingen/wfs?request=GetFeature&service=WFS&version=2.0.0&typeName=cbs_gemeente_2019_gegeneraliseerd&outputFormat=json")
 
-mean_vos_2019 <- vos_2019 %>%
+mean_vos_2019_muni <- vos_2019 %>% filter(schooltype == 'vmbo/havo/vwo') %>%
   group_by(statcode_muni) %>% 
   summarise(
     tot_onderwijzers = sum(onderwijzers),
@@ -115,7 +118,7 @@ mean_vos_2019 <- vos_2019 %>%
 
 data_muni <-
   gemeentegrenzen %>%
-  left_join(mean_vos_2019, by = c('statcode' = 'statcode_muni'))
+  left_join(mean_vos_2019_muni, by = c('statcode' = 'statcode_muni'))
 
 data_muni %>%
   ggplot() +
@@ -127,28 +130,49 @@ data_muni %>%
 
 De `mean_baos_2019` dataset moet worden gekoppeld aan de geometrie uit de dataset van het Centraal Bureau voor de Statistiek.
 
-```{r}
+```{r fig.height=30, fig.width=15}
 library(sf)
 corop_grenzen <- st_read("https://geodata.nationaalgeoregister.nl/cbsgebiedsindelingen/wfs?request=GetFeature&service=WFS&version=2.0.0&typeName=cbs_coropgebied_2019_gegeneraliseerd&outputFormat=json")
 
+mean_vos_2019_corop<- vos_2019 %>%
+  group_by(statcode_corop, schooltype) %>% 
+  summarise(
+    tot_onderwijzers = sum(onderwijzers),
+    tot_leerlingen = sum(leerlingen),
+    mean_school_size = mean(leerlingen),
+    mean_ll_lr_ratio = mean(ll_lr_ratio, na.rm = T),
+    perc_high_ll_lr_ratio = sum(ll_lr_ratio > landelijk_gemiddelde, na.rm = T) / n()
+  ) %>% 
+  ungroup() %>%
+  mutate(
+    ll_lr_ratio_cut = cut(mean_ll_lr_ratio, breaks = quantile(mean_ll_lr_ratio))
+    )
+
+create_corop_with_school_type = function(t) cbind(corop_grenzen, data.frame(schooltype = t))
+corop_grenzen_schooltype = do.call('rbind', lapply(unique(mean_vos_2019_corop$schooltype), create_corop_with_school_type))
+
 data_corop <-
-  corop_grenzen %>%
-  left_join(mean_vos_2019, by = c('statcode' = 'statcode_corop'))
+  corop_grenzen_schooltype %>%
+  full_join(mean_vos_2019_corop, by = c('statcode' = 'statcode_corop', 'schooltype' = 'schooltype')) %>%
+  filter(schooltype %in% 'vmbo/havo/vwo')
 
 
-
-data %>%
+p = data_corop %>%
   ggplot() +
   geom_sf(aes(fill = mean_ll_lr_ratio)) +
   scale_fill_viridis_c() +
   labs(title = "Gemiddelde Leerling/Leraar Ratio (per COROP regio)", fill = "") +
+  facet_grid(rows = vars(schooltype)) + 
   theme_void()
+
+ggsave('vo_corop.pdf', p, height = 15, width = 15)
+p
 ```
 
 Op bovenstaande kaartje zien we de variantie per gemeente. De schaal wordt echter gedomnieerd door uitschieters: gemeentes met zeer grote en kleine groepen. Daarnaast kan het gemeentelijke gemiddelde gedreven worden door uitschieters. Tenslotte zijn we meer geinteresseerd in scholen met hoge ratios dan lage ratios. Daarom maken we een kaart van Nederland waarop de fractie van scholen met ratio's boven het landelijke gemiddelde per gemeente zichbaar is.
 
 ```{r}
-ggplot(data) +
+ggplot(data_corop) +
   geom_sf(aes(fill = perc_high_ll_lr_ratio)) +
   labs(title = "Percentage scholen met bovengemiddelde leerling/leraar ratios (per gemeente)", fill = "") +
   scale_fill_continuous(type = "viridis") +
@@ -158,7 +182,7 @@ ggplot(data) +
 Een laatste manier om de verschillende duidelijker zichbaar te maken is om te tonen in welk kwartiel gemeentes vallen:
 
 ```{r}
-ggplot(data) +
+ggplot(data_corop) +
   geom_sf(aes(fill = ll_lr_ratio_cut)) +
   labs(title = "ll_lr_ratio_cut", fill = "") +
   scale_fill_brewer(palette = 'Reds') +
@@ -199,36 +223,6 @@ Deze cijfers bevestigen de analyse hierboven: de grootste gemeenten hebben evenv
 
 # Hoe heeft het aantal docenten zich ontwikkeld t.o.v. het aantal leerlingen?
 Het Ministerie van Onderwijs schetst in haar ramingen een steeds groeiend tekort. Hoe heeft het aantal docenten zich ontwikkeld in verhouding met het aantal leerlingen? Daarvoor berekenen we dezelfde statistieken als hierboven voor het jaar 2009 en vergelijken de totaalaantallen met het jaar 2019:
-
-```{r}
-baos_2009 = baos %>% filter(jaar == 2009)
-
-tot_2009 = baos_2009 %>% summarise(
-  tot_scholen = n(),
-  tot_leerlingen = sum(leerlingen),
-  gem_leerlingen = mean(leerlingen),
-  tot_onderwijzers = sum(onderwijzers),
-  gem_ll_lr_ratio = mean(ll_lr_ratio),
-  tot_ll_lr_ratio = sum(leerlingen) / sum(onderwijzers)
-) 
-head(tot_2009)
-```
-
-```{r}
-tot_2019 = baos_2019 %>% summarise(
-  tot_scholen = n(),
-  tot_leerlingen = sum(leerlingen),
-  gem_leerlingen = mean(leerlingen),
-  tot_onderwijzers = sum(onderwijzers),
-  gem_ll_lr_ratio = mean(ll_lr_ratio),
-  tot_ll_lr_ratio = sum(leerlingen) / sum(onderwijzers)
-)
-head(tot_2019)
-```
-
-```{r}
-round(unlist(tot_2019) / unlist(tot_2009), 2)
-```
 
 Bovenstaande tabellen laten zien dat het PO is gekrompen in het laatste decennium. Het aantal leerlingen is iets harder gezakt dan het aantal docenten. Daardoor is leraar-leerling ratio is landelijk 3% toegenomen. Dat staat gelijk aan een halve leerling extra voor iedere docent. Het is echter opvallend dat het aantal scholen niet is meebewogen: de gemiddelde basisschool is 10% kleiner dan 10 jaar geleden. 
 

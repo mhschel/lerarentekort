@@ -3,14 +3,14 @@ library(sf)
 
 statcode_from_gm_nummer = function(x) paste0('GM', paste(rep('0', 4-nchar(x)), collapse = ''), x)
 
-adres_bao = read_csv('data/adres_bao.csv') %>% select(
+adres_bao = read_csv('data_files/adres_bao.csv') %>% select(
   brin = `BRIN NUMMER`,
   pc6 = POSTCODE,
   statcode = GEMEENTENUMMER
 )
 adres_bao$statcode = sapply(adres_bao$statcode, statcode_from_gm_nummer)
 
-functiemix_school = read_csv('data/functiemix-instellingen.csv') %>% select(
+functiemix_school = read_csv('data_files/functiemix-instellingen.csv') %>% select(
   jaar = JAAR,
   brin = BRIN_NUMMER,
   naam_school = INSTELLINGSNAAM,
