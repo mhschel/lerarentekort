@@ -48,7 +48,13 @@ functiemix_school = read_csv('../data_files/functiemix-instellingen.csv') %>% se
   gem_loonsom = GEMIDDELDE_LOONSOM_OP_BRUTSAL,
   leerlingen = AANTAL_LEERLINGEN,
   loc_randstad = RANDSTAD,
-  gewicht_ll = AANTAL_GEWICHTLEERLINGEN
+  gewicht_ll = AANTAL_GEWICHTLEERLINGEN,
+  schaal_10 = OMVANG_FORMATIE_OP_L10,
+  schaal_11 = OMVANG_FORMATIE_OP_L11,
+  schaal_12 = OMVANG_FORMATIE_OP_L12,
+  schaal_LA = OMVANG_FORMATIE_OP_LA,
+  schaal_LB = OMVANG_FORMATIE_OP_LB,
+  schaal_LC = OMVANG_FORMATIE_OP_LC
 ) %>% mutate(
   perc_gewicht = gewicht_ll / leerlingen,
   gewogen_ll_lr_ratio = gewicht_ll / onderwijzers
@@ -90,7 +96,7 @@ ggplot(baos_jaar, aes(x = jaar, y = nat_ll_lr_ratio)) + geom_line() + theme_mini
 ggplot(baos_jaar, aes(x = jaar, y = leerlingen)) + geom_line() + theme_minimal()
 ggplot(baos_jaar, aes(x = jaar, y = schools)) + geom_line() + theme_minimal() + coord_cartesian(ylim = c(6000, 6500))
 ggplot(baos_jaar, aes(x = jaar, y = leerlingen / managers)) + geom_line() + theme_minimal()
-ggplot(baos_jaar, aes(x = jaar, y = leerlingen / ondersteunend_personeel)) + geom_line() + theme_minimal()
+ggplot(baos_jaar, aes(x = jaar, y = ondersteunend_personeel / schools)) + geom_line() + theme_minimal()
 ggplot(baos_jaar, aes(x = jaar, y = medewerkers / leerlingen)) + geom_line() + theme_minimal()
 ggplot(baos_jaar, aes(x = jaar, y = medewerkers_op_salaris / medewerkers)) + geom_line() + theme_minimal()
 ggplot(baos_jaar, aes(x = jaar, y = leerlingen / medewerkers)) + geom_line() + theme_minimal()
