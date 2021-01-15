@@ -46,18 +46,13 @@ summary(lm(data=school_herverdeling_data_gemeente, perc_leraar_overschot_tekort~
 Geografische patronen in loonsom
 ```{r}
 gemeente_lonen_2019 = baos_2019 %>% 
-  group_by(statcode) %>% mutate(
+  group_by(statcode) %>% summarise(
     totaal_loonsom = sum(loonsom), 
     totaal_onderwijzers = sum(onderwijzers),
     gemiddeld_loonsom = totaal_loonsom / totaal_onderwijzers,
-    ) %>% select(
-      statcode, totaal_loonsom, totaal_onderwijzers, gemiddeld_loonsom, loc_randstad
     )
 
-summary(lm(data=gemeente_lonen_2019, gemiddeld_loonsom~loc_randstad))
 
-boxplot(gemiddeld_loonsom~loc_randstad, data=gemeente_lonen_2019, xlab= "Randstad", ylab="Gemiddeld Loon")
-hist(gemeente_lonen_2019$gemiddeld_loonsom)
 
 baos_2014 = baos %>% filter(jaar==2014)
 
@@ -66,16 +61,26 @@ gemeente_lonen_2014 = baos_2014 %>%
     totaal_loonsom = sum(loonsom), 
     totaal_onderwijzers = sum(onderwijzers),
     gemiddeld_loonsom = totaal_loonsom / totaal_onderwijzers,
-    ) %>% select(
-      statcode, totaal_loonsom, totaal_onderwijzers, gemiddeld_loonsom, loc_randstad
     )
 
-summary(lm(data=gemeente_lonen_2014, gemiddeld_loonsom~loc_randstad))
 
-boxplot(gemiddeld_loonsom~loc_randstad, data=gemeente_lonen_2014, xlab= "Randstad", ylab="Gemiddeld Loon")
-hist(gemeente_lonen_2014$gemiddeld_loonsom)
   
 ```
+
+Aanpassing dataset nodig nog: 
+```{r}
+summary(lm(data=gemeente_lonen_2019, gemiddeld_loonsom~randstad))
+
+boxplot(gemiddeld_loonsom~randstad, data=gemeente_lonen_2019, xlab= "Randstad", ylab="Gemiddeld Loon")
+hist(gemeente_lonen_2019$gemiddeld_loonsom)
+
+summary(lm(data=gemeente_lonen_2014, gemiddeld_loonsom~randstad))
+
+boxplot(gemiddeld_loonsom~randstad, data=gemeente_lonen_2014, xlab= "Randstad", ylab="Gemiddeld Loon")
+hist(gemeente_lonen_2014$gemiddeld_loonsom)
+```
+
+
 
 ```{r}
 library(sf)
@@ -155,11 +160,7 @@ ggplot(schaal_11_12_data, aes(percentage_11_12, gem_loonsom)) +
 ```
 
 ```{r}
-library(readxl)
-schoolgewicht <- read_excel("/Users/anne-licnossen/Documents/Min Financiën/R. projects/tekortindicator/schoolweging-2017-2019.xlsx", sheet="Tabel 3") %>%
-  select(brin=`Tabel 3`, schoolweging= `...4`) %>% slice(-(1:4)) %>% mutate(schoolweging = as.numeric(schoolweging))
-
-baos_2019_schoolgewicht = baos_2019 %>% left_join(schoolgewicht) %>% mutate(
+baos_2019_schoolgewicht = baos_2019  %>% mutate(
    percentage_11_12 = (schaal_11 + schaal_12) / onderwijzers
 )
 
@@ -170,6 +171,76 @@ summary(lm(data=baos_2019_schoolgewicht, gem_loonsom~schoolweging+percentage_11_
 
 
 ```
+
+Vermogen
+```{r}
+
+baos_2019_besturen <- baos_2019 %>% 
+  mutate(
+     diff_nl = ll_lr_ratio - (sum(leerlingen)/ sum(onderwijzers)),
+    leraar_overschot_tekort = onderwijzers - (leerlingen / (sum(leerlingen) / sum(onderwijzers)))
+  ) %>% group_by(bevoegd_gezag) %>% summarise(
+    per_leraar_tekort = (sum(leraar_overschot_tekort) / sum(onderwijzers)) *100,
+    leraar_overschot_tekort_bestuur = sum(leraar_overschot_tekort), 
+    totaal_loonsom = mean(gem_loonsom),
+    vermogen_bestuur = mean(vermogen),
+    vermogen_leerling = sum(vermogen)/sum(leerlingen)
+  ) 
+
+ggplot(baos_2019_besturen, aes(vermogen_bestuur, per_leraar_tekort)) +
+  geom_bin2d()
+
+ggplot(baos_2019_besturen, aes(vermogen_leerling, per_leraar_tekort)) +
+  geom_bin2d()
+
+ggplot(baos_2019_besturen, aes(vermogen_bestuur, leraar_overschot_tekort_bestuur)) +
+  geom_bin2d()
+
+ggplot(baos_2019_besturen, aes(vermogen_bestuur, totaal_loonsom)) +
+  geom_bin2d()
+
+summary(lm(data=baos_2019_besturen, per_leraar_tekort~vermogen_bestuur))
+
+ggplot(baos_2019_besturen, aes(, per_leraar_tekort)) +
+  geom_bin2d()
+
+
+```
+
+```{r}
+schaal_data = baos_2019 %>% mutate(
+  percentage_11 = schaal_11 / onderwijzers,
+  percentage_11_12 = (schaal_11 + schaal_12)/ onderwijzers
+) 
+
+ggplot(baos_2019, aes(leeftijd, gem_loonsom)) +
+  geom_bin2d()
+
+summary(lm(data=schaal_data, gem_loonsom~leeftijd))
+summary(lm(data=schaal_data, gem_loonsom~leeftijd+percentage_11_12))
+summary(lm(data=schaal_data, gem_loonsom~leeftijd+percentage_11))
+
+ggplot(baos_2019, aes((totaal_bekostiging / leerlingen), gem_loonsom)) +
+  geom_bin2d() + xlim(0,15000)
+
+summary(lm(data=baos_2019 %>% mutate(totaal_leerling = totaal_bekostiging / leerlingen), gem_loonsom~totaal_leerling))
+summary(lm(data=schaal_data %>% mutate(totaal_leerling = totaal_bekostiging / leerlingen), gem_loonsom~totaal_leerling+leeftijd+percentage_11_12))
+
+summary(lm(data=baos_2019, gem_loonsom~oab))
+summary(lm(data=schaal_data, gem_loonsom~oab+leeftijd+percentage_11_12))
+
+salaris_model <- lm(data=schaal_data, gem_loonsom~leeftijd+percentage_11_12)
+
+schaal_data$gem_loonsom_verschil = schaal_data$gem_loonsom - predict(salaris_model, schaal_data)
+
+hist(schaal_data$gem_loonsom_verschil)
+
+summary(lm(data=schaal_data %>% mutate(vermogen_ll = vermogen / leerlingen), gem_loonsom_verschil~vermogen_ll))
+
+
+
+```
+
 
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
