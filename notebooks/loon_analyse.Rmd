@@ -1,0 +1,180 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Dit is een R Notebook. Deze gaat ervanuit dat je beschikt over de R Notebook 'po_analyse.Rmd'. 
+
+
+```{r}
+school_herverdeling_data = baos_2019 %>% 
+  mutate(
+    diff_nl = ll_lr_ratio - (sum(leerlingen)/ sum(onderwijzers)),
+    leraar_overschot_tekort = onderwijzers - (leerlingen / (sum(leerlingen) / sum(onderwijzers))),
+    perc_leraar_overschot_tekort = (leraar_overschot_tekort / onderwijzers) * 100
+  )
+  
+library(ggplot2)  
+
+ggplot(school_herverdeling_data, aes(gem_loonsom, leraar_overschot_tekort)) +
+  geom_bin2d()
+
+ggplot(school_herverdeling_data, aes(gem_loonsom, perc_leraar_overschot_tekort)) +
+  geom_bin2d()
+
+summary(lm(data=school_herverdeling_data, leraar_overschot_tekort~gem_loonsom))
+summary(lm(data=school_herverdeling_data, perc_leraar_overschot_tekort~gem_loonsom))
+  
+school_herverdeling_data_gemeente = baos_2019 %>% 
+  group_by(statcode) %>% mutate(
+    diff_nl = ll_lr_ratio - (sum(leerlingen)/ sum(onderwijzers)),
+    leraar_overschot_tekort = onderwijzers - (leerlingen / (sum(leerlingen) / sum(onderwijzers))),
+    perc_leraar_overschot_tekort = (leraar_overschot_tekort / onderwijzers) * 100
+  )
+
+ggplot(school_herverdeling_data_gemeente, aes(gem_loonsom, leraar_overschot_tekort)) +
+  geom_bin2d()
+
+ggplot(school_herverdeling_data_gemeente, aes(gem_loonsom, perc_leraar_overschot_tekort)) +
+  geom_bin2d()
+
+summary(lm(data=school_herverdeling_data_gemeente, leraar_overschot_tekort~gem_loonsom))
+summary(lm(data=school_herverdeling_data_gemeente, perc_leraar_overschot_tekort~gem_loonsom))
+
+
+```
+Geografische patronen in loonsom
+```{r}
+gemeente_lonen_2019 = baos_2019 %>% 
+  group_by(statcode) %>% mutate(
+    totaal_loonsom = sum(loonsom), 
+    totaal_onderwijzers = sum(onderwijzers),
+    gemiddeld_loonsom = totaal_loonsom / totaal_onderwijzers,
+    ) %>% select(
+      statcode, totaal_loonsom, totaal_onderwijzers, gemiddeld_loonsom, loc_randstad
+    )
+
+summary(lm(data=gemeente_lonen_2019, gemiddeld_loonsom~loc_randstad))
+
+boxplot(gemiddeld_loonsom~loc_randstad, data=gemeente_lonen_2019, xlab= "Randstad", ylab="Gemiddeld Loon")
+hist(gemeente_lonen_2019$gemiddeld_loonsom)
+
+baos_2014 = baos %>% filter(jaar==2014)
+
+gemeente_lonen_2014 = baos_2014 %>% 
+  group_by(statcode) %>% mutate(
+    totaal_loonsom = sum(loonsom), 
+    totaal_onderwijzers = sum(onderwijzers),
+    gemiddeld_loonsom = totaal_loonsom / totaal_onderwijzers,
+    ) %>% select(
+      statcode, totaal_loonsom, totaal_onderwijzers, gemiddeld_loonsom, loc_randstad
+    )
+
+summary(lm(data=gemeente_lonen_2014, gemiddeld_loonsom~loc_randstad))
+
+boxplot(gemiddeld_loonsom~loc_randstad, data=gemeente_lonen_2014, xlab= "Randstad", ylab="Gemiddeld Loon")
+hist(gemeente_lonen_2014$gemiddeld_loonsom)
+  
+```
+
+```{r}
+library(sf)
+gemeentegrenzen <- st_read("https://geodata.nationaalgeoregister.nl/cbsgebiedsindelingen/wfs?request=GetFeature&service=WFS&version=2.0.0&typeName=cbs_gemeente_2019_gegeneraliseerd&outputFormat=json")
+
+data <-
+  gemeentegrenzen %>%
+  left_join(gemeente_lonen_2019)
+
+data %>%
+  ggplot() +
+  geom_sf(aes(fill = gemiddeld_loonsom)) +
+  scale_fill_viridis_c(limits=c(2700, 4000)) +
+  labs(title = "Gemiddelde Loonsom 2019 (per gemeente)", fill = "") +
+  theme_void()
+
+data <-
+  gemeentegrenzen %>%
+  left_join(gemeente_lonen_2014)
+
+data %>%
+  ggplot() +
+  geom_sf(aes(fill = gemiddeld_loonsom)) +
+  scale_fill_viridis_c(limits=c(2700, 4000)) +
+  labs(title = "Gemiddelde Loonsom 2014 (per gemeente)", fill = "") +
+  theme_void()
+
+```
+
+
+```{r}
+gemeente_loon_jaar = baos %>% 
+  group_by(jaar) %>% mutate(
+    jaar_gemiddelde = mean(loonsom)
+  ) %>% select(jaar_gemiddelde, jaar)
+
+ggplot(gemeente_loon_jaar, aes(x = jaar, y = jaar_gemiddelde)) + geom_line() + theme_minimal() 
+
+
+ontwikkeling_loon_gemeente = baos %>%  filter(jaar == 2014 | jaar == 2019) %>% group_by(statcode, brin)  %>%
+   summarise(
+     dif_loon_school = gem_loonsom[jaar==2019] - gem_loonsom[jaar==2014] 
+   ) %>% group_by(statcode) %>%
+  summarise(
+    gem_gemeente = mean(dif_loon_school)
+  )
+
+data <-
+  gemeentegrenzen %>%
+  left_join(ontwikkeling_loon_gemeente)
+
+data %>%
+  ggplot() +
+  geom_sf(aes(fill = gem_gemeente)) +
+  scale_fill_viridis_c() +
+  labs(title = "Verandering Loonsom 2014-2019 (per gemeente)", fill = "") +
+  theme_void()
+
+```
+```{r}
+hist(baos_2019$gem_loonsom)
+
+schaal_11_data = baos_2019 %>% mutate(
+  percentage_11 = schaal_11 / onderwijzers
+) 
+
+ggplot(schaal_11_data, aes(percentage_11, gem_loonsom)) +
+  geom_bin2d()
+
+schaal_11_12_data = baos_2019 %>% mutate(
+  percentage_11_12 = (schaal_11 + schaal_12) / onderwijzers
+) 
+
+ggplot(schaal_11_12_data, aes(percentage_11_12, gem_loonsom)) +
+  geom_bin2d()
+
+```
+
+```{r}
+library(readxl)
+schoolgewicht <- read_excel("/Users/anne-licnossen/Documents/Min Financiën/R. projects/tekortindicator/schoolweging-2017-2019.xlsx", sheet="Tabel 3") %>%
+  select(brin=`Tabel 3`, schoolweging= `...4`) %>% slice(-(1:4)) %>% mutate(schoolweging = as.numeric(schoolweging))
+
+baos_2019_schoolgewicht = baos_2019 %>% left_join(schoolgewicht) %>% mutate(
+   percentage_11_12 = (schaal_11 + schaal_12) / onderwijzers
+)
+
+ggplot(baos_2019_schoolgewicht, aes(schoolweging, gem_loonsom)) +
+  geom_bin2d()
+
+summary(lm(data=baos_2019_schoolgewicht, gem_loonsom~schoolweging+percentage_11_12))
+
+
+```
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
