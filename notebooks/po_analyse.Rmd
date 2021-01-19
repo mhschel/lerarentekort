@@ -118,7 +118,9 @@ baos_jaar = functiemix_school %>% filter(schooltype == 'bao' & ll_lr_ratio > 5 &
     medewerkers_op_salaris = sum(medewerkers_op_salaris)
     )
 
-ggplot(baos_jaar, aes(x = jaar, y = nat_ll_lr_ratio)) + geom_line() + theme_minimal() + coord_cartesian(ylim = c(16, 20))
+ggplot(baos_jaar, aes(x = jaar, y = nat_ll_lr_ratio)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() + 
+  coord_cartesian(ylim = c(16, 20)) + scale_x_continuous(breaks=2006:2019) + geom_point() + 
+  ylab('Landelijke Leerling/Leraar Ratio (LLR)')
 ggplot(baos_jaar, aes(x = jaar, y = leerlingen)) + geom_line() + theme_minimal()
 ggplot(baos_jaar, aes(x = jaar, y = schools)) + geom_line() + theme_minimal() + coord_cartesian(ylim = c(6000, 6500))
 ggplot(baos_jaar, aes(x = jaar, y = leerlingen / managers)) + geom_line() + theme_minimal()
@@ -127,6 +129,16 @@ ggplot(baos_jaar, aes(x = jaar, y = medewerkers / leerlingen)) + geom_line() + t
 ggplot(baos_jaar, aes(x = jaar, y = medewerkers_op_salaris / medewerkers)) + geom_line() + theme_minimal()
 ggplot(baos_jaar, aes(x = jaar, y = leerlingen / medewerkers)) + geom_line() + theme_minimal()
 ```
+
+```{r}
+baos_2019 %>% filter(
+  gemeente %in% c('AMSTERDAM', 'ROERMOND', 'UTRECHT', 'ROTTERDAM', "'S-GRAVENHAGE", 'EINDHOVEN', 'ZWOLLE'), 
+  ll_lr_ratio > 10, 
+  ll_lr_ratio < 30)  %>% 
+  ggplot(aes(x = fct_reorder(gemeente, ll_lr_ratio, mean), y = ll_lr_ratio)) + geom_violin(fill='grey80') + 
+  theme_minimal() + xlab('') + ylab('LLR')
+```
+
 
 # Hoe varieert de leerling/leraar ratio tussen gemeenten?
 We berekenen voor iedere gemeente de gemiddelde leerling/leraar ratios voor alle scholen binnen de gemeente in 2019. Tevens berekenen we automatisch de kwartielen en delen gemeentes in naar die kwartielen en als robuusteidsmaat de fractie van het aantal scholen in de gemeente dat een hogere leerling/leraar ratio heeft dan het landelijk gemiddelde.
@@ -222,13 +234,22 @@ De gemeentes met de minste scholen met bovengemiddelde leerling/leraar ratios:
 
 ```{r}
 data %>% sort_means_table(sort_var = perc_high_ll_lr_ratio)
+
+
+
 ```
 
 En de scores van de G5 onder elkaar:
 
 ```{r}
-data %>% sort_means_table(sort_var = desc(perc_high_ll_lr_ratio)) %>%
-  filter(statnaam %in% c('Amsterdam', 'Utrecht', 'Eindhoven', 'Rotterdam', "'s-Gravenhage"))
+nat_gem <- sum(baos_2019$leerlingen) / sum(baos_2019$onderwijzers) 
+g5_data <- data %>% sort_means_table(sort_var = desc(perc_high_ll_lr_ratio)) %>%
+  filter(statnaam %in% c('Amsterdam', 'Utrecht', 'Eindhoven', 'Rotterdam', "'s-Gravenhage", "Zwolle", "Roermond")) %>%
+  add_row(statnaam = 'Landelijk', mean_ll_lr_ratio = nat_gem) 
+
+ggplot(g5_data, aes(x = fct_reorder(statnaam, mean_ll_lr_ratio, mean), y = mean_ll_lr_ratio)) + 
+  geom_bar(stat='identity') + coord_cartesian(ylim = c(10, 21)) + theme_minimal() + ylab('Gemiddelde LLR') + xlab('') +  
+  theme(text = element_text(size=15), axis.text.x = element_text(angle=45, hjust=1))
 ```
 
 Deze cijfers bevestigen de analyse hierboven: de grootste gemeenten hebben evenveel of meer docenten per leerling als landelijk gemiddeld.
