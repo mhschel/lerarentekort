@@ -22,6 +22,13 @@ ggplot(school_herverdeling_data, aes(gem_loonsom, leraar_overschot_tekort)) +
 ggplot(school_herverdeling_data, aes(gem_loonsom, perc_leraar_overschot_tekort)) +
   geom_bin2d()
 
+ggplot(school_herverdeling_data, aes(gem_loonsom, ll_lr_ratio)) +
+  theme_minimal() + labs(fill = "Aantal scholen") + geom_bin2d(bins=100) +
+  labs(x = 'Gemiddelde Loonsom', y = 'LLR')
+
+summary(lm(data=school_herverdeling_data, ll_lr_ratio~gem_loonsom))
+
+
 summary(lm(data=school_herverdeling_data, leraar_overschot_tekort~gem_loonsom))
 summary(lm(data=school_herverdeling_data, perc_leraar_overschot_tekort~gem_loonsom))
   
@@ -68,18 +75,6 @@ gemeente_lonen_2014 = baos_2014 %>%
 ```
 
 Aanpassing dataset nodig nog: 
-```{r}
-summary(lm(data=gemeente_lonen_2019, gemiddeld_loonsom~randstad))
-
-boxplot(gemiddeld_loonsom~randstad, data=gemeente_lonen_2019, xlab= "Randstad", ylab="Gemiddeld Loon")
-hist(gemeente_lonen_2019$gemiddeld_loonsom)
-
-summary(lm(data=gemeente_lonen_2014, gemiddeld_loonsom~randstad))
-
-boxplot(gemiddeld_loonsom~randstad, data=gemeente_lonen_2014, xlab= "Randstad", ylab="Gemiddeld Loon")
-hist(gemeente_lonen_2014$gemiddeld_loonsom)
-```
-
 
 
 ```{r}
@@ -164,8 +159,11 @@ baos_2019_schoolgewicht = baos_2019  %>% mutate(
    percentage_11_12 = (schaal_11 + schaal_12) / onderwijzers
 )
 
-ggplot(baos_2019_schoolgewicht, aes(schoolweging, gem_loonsom)) +
-  geom_bin2d()
+ggplot(baos_2019_schoolgewicht, aes(gem_loonsom, schoolweging)) +
+  geom_bin2d(bins=100) + theme_minimal() + labs(fill = "Aantal scholen") +
+  labs(x = 'Gemiddelde Loonsom', y = 'Schoolgewicht')
+
+
 
 summary(lm(data=baos_2019_schoolgewicht, gem_loonsom~schoolweging+percentage_11_12))
 
@@ -182,16 +180,19 @@ baos_2019_besturen <- baos_2019 %>%
   ) %>% group_by(bevoegd_gezag) %>% summarise(
     per_leraar_tekort = (sum(leraar_overschot_tekort) / sum(onderwijzers)) *100,
     leraar_overschot_tekort_bestuur = sum(leraar_overschot_tekort), 
-    totaal_loonsom = mean(gem_loonsom),
+    gem_loonsom = mean(gem_loonsom),
     vermogen_bestuur = mean(vermogen),
     vermogen_leerling = sum(vermogen)/sum(leerlingen)
   ) 
 
-ggplot(baos_2019_besturen, aes(vermogen_bestuur, per_leraar_tekort)) +
-  geom_bin2d()
+require(scales)
+ggplot(baos_2019_besturen %>% filter(vermogen_leerling < 150000), aes(gem_loonsom, vermogen_leerling)) +
+  geom_bin2d(bins=100) + theme_minimal() + labs(fill = "Aantal scholen") +
+  labs(x = 'Gemiddelde Loonsom', y = 'Vermogen per Leerling') + scale_y_continuous(labels = comma)
 
-ggplot(baos_2019_besturen, aes(vermogen_leerling, per_leraar_tekort)) +
-  geom_bin2d()
+ggplot(baos_2019, aes(gem_loonsom, oab / leerlingen)) +
+  geom_bin2d(bins=100) + theme_minimal() + labs(fill = "Aantal scholen") +
+  labs(x = 'Gemiddelde Loonsom', y = 'Achterstandsmiddelen per leerling') + scale_y_continuous(labels = comma)
 
 ggplot(baos_2019_besturen, aes(vermogen_bestuur, leraar_overschot_tekort_bestuur)) +
   geom_bin2d()
@@ -213,8 +214,17 @@ schaal_data = baos_2019 %>% mutate(
   percentage_11_12 = (schaal_11 + schaal_12)/ onderwijzers
 ) 
 
-ggplot(baos_2019, aes(leeftijd, gem_loonsom)) +
-  geom_bin2d()
+ggplot(baos_2019, aes(gem_loonsom, leeftijd )) +
+  geom_bin2d(bins=100) + theme_minimal() + labs(fill = "Aantal scholen") +
+  labs(x = 'Gemiddelde Loonsom', y = 'Gemiddelde Leeftijd')
+
+ggplot(schaal_data, aes(gem_loonsom, percentage_11_12 * 100)) +
+  geom_bin2d(bins=100) + theme_minimal() + labs(fill = "Aantal scholen") +
+  labs(x = 'Gemiddelde Loonsom', y = 'Percentage Schaal 11 of 12')
+
+ggplot(baos_2019_schoolgewicht, aes(gem_loonsom, schoolweging)) +
+  geom_bin2d(bins=100) + theme_minimal() + labs(fill = "Aantal scholen") +
+  labs(x = 'Gemiddelde Loonsom', y = 'Schoolgewicht')
 
 summary(lm(data=schaal_data, gem_loonsom~leeftijd))
 summary(lm(data=schaal_data, gem_loonsom~leeftijd+percentage_11_12))
