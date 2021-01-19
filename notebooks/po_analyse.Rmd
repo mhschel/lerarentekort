@@ -73,8 +73,34 @@ table(functiemix_school$statcode)[1:5]
 In deze analyse focussen we op het PO. We selecteren dus alle reguliere basisscholen en inspecteren de landelijke leerling-leraar ratios.
 
 ```{r}
-baos = functiemix_school %>% filter(schooltype == 'bao' & ll_lr_ratio > 5 & ll_lr_ratio < 50)
-baos_2019 = baos %>% filter(jaar == 2019)
+library(readxl)
+schoolgewicht <- read_excel("../data_files/schoolweging-2017-2019.xlsx", sheet="Tabel 3") %>%
+  select(brin=`Tabel 3`, schoolweging= `...4`) %>% slice(-(1:4)) %>% mutate(schoolweging = as.numeric(schoolweging))
+
+balans_overzicht <- read_excel("../data_files/01-balans-2015-2019.xlsx") %>% filter(Sector == "PO") %>%
+  mutate(
+    bevoegd_gezag = as.numeric(Bevoegd_Gezag), 
+    vermogen = Eigen_vermogen,
+  ) %>% select(bevoegd_gezag, vermogen, Jaar)
+
+leeftijd_data <- read.csv("../data_files/Gemid_leeftijd.csv", sep=",") %>% filter(SCHOOLKENMERKEN == "GEMIDDELDE_GEWOGEN_LEEFTIJD") %>% select(
+  brin = BRINNUMMER, 
+  leeftijd = WAARDE,
+  jaar = PEILJAAR
+)
+
+inkomsten_data <- read.csv("../data_files/inkomsten_po.csv", sep=",") %>% group_by(jaar=PEILJAAR, brin=BRINNUMMER) %>% summarise(
+  totaal_bekostiging = BEDRAG[BEKOSTIGINGSKENMERKEN == "TOTAAL"],
+  kleine_schooltoeslag = BEDRAG[BEKOSTIGINGSKENMERKEN == "KLEINE_SCHOLEN_TOESLAG"],
+  oab = BEDRAG[BEKOSTIGINGSKENMERKEN == "BESTRIJDING_ONDERWIJSACHTERSTANDEN"]
+) 
+
+```
+
+
+```{r}
+baos = functiemix_school %>% filter(schooltype == 'bao' & ll_lr_ratio > 5 & ll_lr_ratio < 50) %>% left_join(balans_overzicht, by=(c("bevoegd_gezag" = "bevoegd_gezag", "jaar" = "Jaar"))) %>% left_join(leeftijd_data, by=(c('brin' = "brin", "jaar"="jaar"))) %>% left_join(inkomsten_data, by=(c("jaar"="jaar", "brin"="brin")))
+baos_2019 = baos %>% filter(jaar == 2019) %>% left_join(schoolgewicht) 
 ggplot(baos_2019, aes(x = ll_lr_ratio)) + geom_histogram() + theme_minimal()
 ```
 
