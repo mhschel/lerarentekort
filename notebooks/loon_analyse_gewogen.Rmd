@@ -27,36 +27,15 @@ ggplot(baos_2019, aes(kleine_schooltoeslag, ll_lr_ratio)) +
 
 ```
 
-# Verloop in oab, kleine schooltoeslag en gewogen LLR 
-```{r}
-gewogen_baos_jaar = baos %>% filter(ll_lr_ratio > 5 & ll_lr_ratio < 50) %>%
-  group_by(jaar) %>% 
-  summarise(
-    nat_ll_lr_ratio = sum(leerlingen) / sum(onderwijzers),
-    gewogen_nat_ll_lr_ratio = mean(gewogen_llr, na.rm=T),
-    landelijk_oab = sum(oab, na.rm=T),
-    landelijk_kleine_scholen = sum(kleine_schooltoeslag, na.rm=T)
-  )
-
-ggplot(gewogen_baos_jaar, aes(x = jaar, y = nat_ll_lr_ratio)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() + 
-  coord_cartesian(ylim = c(16, 20)) + scale_x_continuous(breaks=2006:2019) + geom_point() + 
-  ylab('Landelijke Leerling/Leraar Ratio (LLR)')
-ggplot(gewogen_baos_jaar, aes(x = jaar, y = gewogen_nat_ll_lr_ratio)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() +geom_point() +
-  ylab('Gewogen Leerling/Leraar ratio')+ scale_x_continuous(breaks=2006:2019)
-ggplot(gewogen_baos_jaar, aes(x = jaar, y = landelijk_oab)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() +geom_point() +
-  ylab('Landelijk totaal o.a.b.')+ scale_x_continuous(breaks=2006:2019)
-ggplot(gewogen_baos_jaar, aes(x = jaar, y = landelijk_kleine_scholen)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() +geom_point() +
-  ylab('Landelijk totaal kleine scholen toeslag')+ scale_x_continuous(breaks=2006:2019)
-
-```
-
 # Verdeling gewogen LLR per gemeente
 ```{r}
 landelijk_gemiddelde = mean(baos_2019$gewogen_llr, na.rm = T)
 gewogen_mean_baos_2019 <- baos_2019 %>% group_by(statcode) %>% summarise(
   gewogen_mean_llr = mean(gewogen_llr, na.rm=T), 
   perc_high_gewogen_llr = sum(gewogen_llr > landelijk_gemiddelde, na.rm = T) / n()
-) 
+) %>% ungroup() %>% mutate(
+  gewogen_llr_cut = cut(gewogen_mean_llr, breaks = quantile(gewogen_mean_llr, na.rm=TRUE))
+)
 
 library(sf)
 gemeentegrenzen <- st_read("https://geodata.nationaalgeoregister.nl/cbsgebiedsindelingen/wfs?request=GetFeature&service=WFS&version=2.0.0&typeName=cbs_gemeente_2019_gegeneraliseerd&outputFormat=json")
@@ -79,11 +58,18 @@ data %>%
   labs(title = "% scholen met bovengemiddelde leerling/leraar ratios (per gemeente)", fill = "") +
   theme_void()
 
+data %>%
+  ggplot() +
+  geom_sf(aes(fill = gewogen_llr_cut)) +
+  labs(title = "Verdeling Gemiddeld gewogen LLR in kwartielen (per gemeente)", fill = "") +
+  scale_fill_brewer(palette = 'Reds') +
+  theme_void()
+
 ```
 
 # Overzicht van de G5 en inzicht in verschillen binnen gemeentes 
 ```{r}
-nat_gewogen_gem <- mean(baos_2019$gewogen_llr)
+nat_gewogen_gem <- mean(baos_2019$gewogen_llr, na.rm=T)
 g5_data <- data %>% filter(
   statnaam %in% c('Amsterdam', 'Utrecht', 'Almere', 'Rotterdam', "'s-Gravenhage", "Zwolle", "Roermond")
   ) %>% add_row(statnaam = 'Landelijk', gewogen_mean_llr = nat_gewogen_gem) 
@@ -93,7 +79,7 @@ ggplot(g5_data, aes(x = fct_reorder(statnaam, gewogen_mean_llr, mean), y = gewog
   geom_bar(stat='identity') + theme_minimal() + ylab('Gemiddelde Gewogen LLR') + xlab('') +  
   theme(text = element_text(size=15), axis.text.x = element_text(angle=45, hjust=1))
 
-baos_2019 %>% filter(
+baos_2019 %>% filter(gewogen_llr > 0, gewogen_llr < 30) %>% filter(
   gemeente %in% c('AMSTERDAM', 'ROERMOND', 'UTRECHT', 'ROTTERDAM', "'S-GRAVENHAGE", 'ALMERE', 'ZWOLLE')
   ) %>% 
   ggplot(aes(x = fct_reorder(gemeente, gewogen_llr, mean), y = gewogen_llr)) + geom_violin(fill='grey80') + 
@@ -181,5 +167,42 @@ ggplot(baos_2019, aes(gem_loonsom, gewogen_llr)) +
 
 ```
 
+#FTE herverplaatsing data
+```{r}
+lokale_herverdeling_data_gewogen = baos_2019 %>%
+  group_by(statcode) %>% mutate(
+  gewogen_leraar_overschot_tekort = onderwijzers - (leerlingen /landelijk_gem),
+  perc_leraar_overschot_tekort = (leraar_overschot_tekort / onderwijzers) * 100
+  ) %>% summarise(
+  fte_verplaatsing = sum(leraar_overschot_tekort[leraar_overschot_tekort > 0]),
+  perc_fte_verplaatsing = fte_verplaatsing / sum(onderwijzers) * 100 
+)
 
+data <-
+  gemeentegrenzen %>%
+  left_join(lokale_herverdeling_data)
+
+ggplot(data) +
+  geom_sf(aes(fill = fte_verplaatsing)) +
+  labs(title = "Aantal FTE verplaatst voor gelijke verdeling (per gemeente)", fill = "") +
+  scale_fill_continuous(type = "viridis") +
+  theme_void()
+
+ggplot(data) +
+  geom_sf(aes(fill = perc_fte_verplaatsing)) +
+  labs(title = "% van FTE verplaatst voor gelijke verdeling (per gemeente)", fill = "") +
+  scale_fill_continuous(type = "viridis") +
+  theme_void() + labs(fill = "% FTE")
+```
+
+```{r}
+baos_2019 = baos %>% filter(jaar == 2019) %>% left_join(schoolgewicht) 
+populatie_weging <- lm(data=baos_2019 %>% mutate(oab_ll = oab/leerlingen, kleine_school_ll = kleine_schooltoeslag / leerlingen), ll_lr_ratio~oab_ll+kleine_school_ll)
+
+baos$gewogen_llr = baos$ll_lr_ratio - predict(populatie_weging, baos_2019)
+summary(populatie_weging)
+
+baos_2019$gewogen_llr = baos_2019$ll_lr_ratio + -1.672e-03 *(baos_2019$oab/baos_2019$leerlingen) + -1.666e-03*(baos_2019$kleine_schooltoeslag/baos_2019$leerlingen)
+
+```
 

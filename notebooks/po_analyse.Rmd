@@ -104,12 +104,21 @@ De verschillende datasets moeten worden samengevoegd tot een dataset. Dit zal de
 
 ```{r}
 baos = functiemix_school %>% filter(schooltype == 'bao' & ll_lr_ratio > 5 & ll_lr_ratio < 50) %>% left_join(balans_overzicht, by=(c("bevoegd_gezag" = "bevoegd_gezag", "jaar" = "Jaar"))) %>% left_join(leeftijd_data, by=(c('brin' = "brin", "jaar"="jaar"))) %>% left_join(inkomsten_data, by=(c("jaar"="jaar", "brin"="brin")))
-populatie_weging <- lm(data=baos, ll_lr_ratio~oab+kleine_schooltoeslag)
-baos$gewogen_llr = baos$ll_lr_ratio - predict(populatie_weging, baos)
 
 baos_2019 = baos %>% filter(jaar == 2019) %>% left_join(schoolgewicht) 
+
 ggplot(baos_2019, aes(x = ll_lr_ratio)) + geom_histogram() + theme_minimal() + labs(x = "LLR", y = "Aantal scholen")
 ```
+
+```{r}
+populatie_weging <- lm(data=baos_2019 %>% mutate(oab_ll = oab/leerlingen, kleine_school_ll = kleine_schooltoeslag / leerlingen), ll_lr_ratio~oab_ll+kleine_school_ll)
+summary(populatie_weging)
+
+baos_2019$gewogen_llr = baos_2019$ll_lr_ratio + -1.672e-03 *(baos_2019$oab/baos_2019$leerlingen) + -1.666e-03*(baos_2019$kleine_schooltoeslag/baos_2019$leerlingen)
+
+
+```
+
 
 FTE tekort tenopzchte van het landelijk gemiddelde. Totaal en voor de G5. 
 ```{r}
@@ -331,7 +340,7 @@ Opnieuw zien we dezelfde contouren: veel gemeentes met hoge leerling-leraar rati
 
 ```{r}
 data %>% sort_changes_table(sort_var = desc(change_ll_lr_ratio)) %>%
-  filter(statnaam %in% c('Amsterdam', 'Utrecht', 'Eindhoven', 'Rotterdam', "'s-Gravenhage"))
+  filter(statnaam %in% c('Amsterdam', 'Utrecht', 'Almere', 'Rotterdam', "'s-Gravenhage"))
 ```
 
 In Amsterdam zijn de klassen gegroeid met 18%. In 2009 scoorde Amsterdam ruim onder het landelijk gemiddelde; in 2019 rond het landelijke gemiddelde. Hetzelfde geldt voor Den Haag en Rotterdam. Utrecht en Eindhoven hebben verhoudingsgewijs geen verandering gezien en hebben verhoudingsgewijs ruim meer docenten dan landelijk gemiddeld. 
@@ -421,7 +430,10 @@ summary(data$perc_leraar_overschot_tekort)
 In bovenstaande analyse komt  de verdeling tussen gemeentes aan bod. Het merendeel van ongelijkheid tussen scholen bestaat echter binnen gemeentes. Driekwart van de ongelijkheid bestaat niet tussen maar binnen gemeentes. 
 
 ```{r}
-
+baos_2019 %>% filter(
+  gemeente %in% c('AMSTERDAM', 'ROERMOND', 'UTRECHT', 'ROTTERDAM', "'S-GRAVENHAGE", 'ALMERE', 'ZWOLLE'),
+  ll_lr_ratio > 10,ll_lr_ratio < 30)  %>% ggplot(aes(x = fct_reorder(gemeente, ll_lr_ratio, mean), y = ll_lr_ratio)) + geom_violin(fill='grey80') +
+ theme_minimal() + xlab('') + ylab('LLR')
 ```
 
 Uit deze violinplot kan worden opgemaakt dat er grote variantie binnen gemeenten zit en minder variantie tussen steden. 
