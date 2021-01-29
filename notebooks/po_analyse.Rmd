@@ -9,12 +9,15 @@ output:
     df_print: paged
 ---
 
-Dit is een [R Markdown](http://rmarkdown.rstudio.com) Notebook met een empirische analyse van het 'lerarentekort'. Het doel van deze analyse is om doelmatig en gericht beleid te informeren om het lerarentekort te addresseren. We zijn in het bijzonder geinteresseerd in het inschatten van de grootte van het tekort en de geographische spreiding.
+Dit is een [R Markdown](http://rmarkdown.rstudio.com) Notebook met een empirische analyse van het 'lerarentekort'. Het doel van deze analyse is om doelmatig en gericht beleid te informeren om het lerarentekort te addresseren. We zijn in het bijzonder geinteresseerd in het inschatten van de grootte van het tekort en de geografische spreiding.
+
+# Abstract 
+Deze analyse richt zich voornamelijk op het empirisch analyseren van de verhoudingen tussen leerlingaantallen en leraren over tijd. Voor de analyse is gebruik gemaakt van openbare data van CBS en DUO. Uit de resultaten blijkt dat het LLR tussen 2006 en 2019 vrij stabiel is gebleven. Het aantal leerlingen is iets harder gedaald dan het aantal docenten in deze periode. Verder blijkt uit de analyse van geografische verschillen dat er een aantal gemeentes zijn met zeer hoge en lage LLR. Vaak is voor deze scholen echter een andere verklaring te vinden. Uit de geografische analyse, waarbij is gekeken naar gemeentes met een hoog percentage scholen met een bovengemiddeld LLR, indeling in kwartielen en de verspreiding van LLR, blijkt dat de G5  evenveel of meer docenten per leerling hebben dan landelijk gemiddeld. Verder blijkt dat de randgemeenten rondom deze steden wel een bovengemiddeld LLR kennen. Veel van de gemeentes met een laag LLR bevinden zich in het noord-oosten, terwijl veel gemeentes met een relatief veel leerlingen t.o.v. leraren zich in Oost-Brabant, Noord-Gelderland en West-Overijssel bevinden. Als je echter kijkt naar de verandering in LLR tussen 2009 en 2019, dan blijkt dat het LLR in 3 van de 5 gemeenten aanzienlijk is toegenomen. Naast de verschillen tussen gemeenten, is ook gekeken naar de variantie binnen gemeenten. Hieruit kwam naar voren dat een groot deel van de ongelijkheid in LLR kan worden weggenomen door herverdeling binnen de gemeenten, aangezien de variantie binnen gemeenten 3 keer zo groot is als tussen gemeenten. 
 
 # Background
-Het Ministerie van Onderwijs en de Onderwijsinspectie spreken beiden van een lerarentekort. Per oktober 2020 [schat](https://www.onderwijsinspectie.nl/onderwerpen/staat-van-het-onderwijs/trends-in-het-onderwijs/primair-onderwijs/lerarentekort-en-kansenongelijkheid) de onderwijsinspectie een tekort van 2.033 FTE and raamt dat het tekort op zal lopen tot 10.000 FTE in het komende decennium. De vier grootste gemeenten kampen met acute tekorten en hebben daarvoor ['noodplannen'](https://www.rijksoverheid.nl/actueel/nieuws/2019/12/16/noodplannen-voor-lerarentekort-in-grote-steden) in het leven geroepen. Er is reeds besloten om ruim €300.000 extra te investeren in een structurele verbetering van de positie van de docent in het PO.
+Het Ministerie van Onderwijs en de Onderwijsinspectie spreken beide van een lerarentekort. Per oktober 2020 [schat](https://www.onderwijsinspectie.nl/onderwerpen/staat-van-het-onderwijs/trends-in-het-onderwijs/primair-onderwijs/lerarentekort-en-kansenongelijkheid) de onderwijsinspectie een tekort van 2.033 FTE en raamt dat het tekort op zal lopen tot 10.000 FTE in het komende decennium. De vier grootste gemeenten kampen met acute tekorten en hebben daarvoor ['noodplannen'](https://www.rijksoverheid.nl/actueel/nieuws/2019/12/16/noodplannen-voor-lerarentekort-in-grote-steden) in het leven geroepen. Er is reeds besloten om ruim €300.000 extra te investeren in een structurele verbetering van de positie van de docent in het PO.
 
-Is dit bedrag voldoende en gaat het geld naar de juiste plekken? De aanpak van de Inspectie gaat uit van een [regionaal beeld](https://www.onderwijsinspectie.nl/onderwerpen/staat-van-het-onderwijs/trends-in-het-onderwijs/leraren-en-lerarentekort/oplopend-lerarentekort-bedreiging-voor-gelijke-kansen-in-het-onderwijs). Daarbij zijn er in het bijzonder fondsen vrijgemaakt voor de vier grote gemeentes. 
+Is dit bedrag voldoende en gaat het geld naar de juiste plekken? De aanpak van de Inspectie gaat uit van een [regionaal beeld](https://www.onderwijsinspectie.nl/onderwerpen/staat-van-het-onderwijs/trends-in-het-onderwijs/leraren-en-lerarentekort/oplopend-lerarentekort-bedreiging-voor-gelijke-kansen-in-het-onderwijs). Daarbij zijn er in het bijzonder fondsen vrijgemaakt voor de vier grote gemeenten. 
 
 Het is opvallend dat de methodieken van Onderwijsinspectie en het noodplan van de gemeente Amsterdam om het tekort te schatten volledig verschillen. De Onderwijsinspectie gebruikt 'vacature-intensiteit' (aantal vacatures in verhouding tot aantal docenten) als graadmeter van het lerarentekort.
 
@@ -62,7 +65,7 @@ functiemix_school = read_csv('../data_files/functiemix-instellingen.csv') %>% se
 functiemix_school = left_join(functiemix_school, adres_bao)
 ```
 
-We willen deze data tonen op kaarten van het CBS. Helaas is het gemeentenummer in de verschillende datasets verschillende geformatteerd. We schrijven de gemeentenummers uit de DUO dataset om naar het formaat van het CBS.
+We willen deze data tonen op kaarten van het CBS. Helaas is het gemeentenummer in de  datasets verschillend geformatteerd. We schrijven de gemeentenummers uit de DUO dataset om naar het formaat van het CBS.
 
 ```{r}
 statcode_from_gm_nummer = function(x) if(is.finite(x)) paste0('GM', paste(rep('0', 4-nchar(x)), collapse = ''), x) else NA
@@ -70,7 +73,7 @@ functiemix_school$statcode = sapply(functiemix_school$statcode, statcode_from_gm
 table(functiemix_school$statcode)[1:5]
 ```
 
-In deze analyse focussen we op het PO. We selecteren dus alle reguliere basisscholen en inspecteren de landelijke leerling-leraar ratios.
+In deze analyse focussen we op het PO. We selecteren dus alle reguliere basisscholen en inspecteren de landelijke leerling-leraar ratios. Daarnaast zullen vermogen, gemiddelde leeftijd en inkomsten worden toegevoegd aan de dataset. De dataset met schoolwegingen is afkomstig van het CBS. Daarnaast gebruiken we voor de gemiddelde leeftijd, het vermogen van besturen en de bekostiging de datasets van DUO. 
 
 ```{r}
 library(readxl)
@@ -97,13 +100,30 @@ inkomsten_data <- read.csv("../data_files/inkomsten_po.csv", sep=",") %>% group_
 
 ```
 
+De verschillende datasets moeten worden samengevoegd tot een dataset. Dit zal de dataset zijn waar we in de rest van de analyse mee zullen werken. 
 
 ```{r}
 baos = functiemix_school %>% filter(schooltype == 'bao' & ll_lr_ratio > 5 & ll_lr_ratio < 50) %>% left_join(balans_overzicht, by=(c("bevoegd_gezag" = "bevoegd_gezag", "jaar" = "Jaar"))) %>% left_join(leeftijd_data, by=(c('brin' = "brin", "jaar"="jaar"))) %>% left_join(inkomsten_data, by=(c("jaar"="jaar", "brin"="brin")))
+populatie_weging <- lm(data=baos, ll_lr_ratio~oab+kleine_schooltoeslag)
+baos$gewogen_llr = baos$ll_lr_ratio - predict(populatie_weging, baos)
+
 baos_2019 = baos %>% filter(jaar == 2019) %>% left_join(schoolgewicht) 
-ggplot(baos_2019, aes(x = ll_lr_ratio)) + geom_histogram() + theme_minimal()
+ggplot(baos_2019, aes(x = ll_lr_ratio)) + geom_histogram() + theme_minimal() + labs(x = "LLR", y = "Aantal scholen")
 ```
 
+FTE tekort tenopzchte van het landelijk gemiddelde. Totaal en voor de G5. 
+```{r}
+landelijk_gem = mean(baos_2019$ll_lr_ratio)
+baos_2019_tekort = baos_2019 %>% mutate(
+  tekort_overschot = ll_lr_ratio - landelijk_gem
+) %>% filter(tekort_overschot > 0) 
+
+sum(baos_2019_tekort$tekort_overschot)
+sum((baos_2019_tekort %>% filter(gemeente %in% c("AMSTERDAM", "ROTTERDAM", "UTRECHT", "'S-GRAVENHAGE", "ALMERE")))$tekort_overschot)
+
+```
+
+Om de ontwikkeling op landelijk niveau te zien, is er een dataset gemaakt waarbij de data is gegroepeerd op jaar. 
 ```{r}
 baos_jaar = functiemix_school %>% filter(schooltype == 'bao' & ll_lr_ratio > 5 & ll_lr_ratio < 50) %>%
   group_by(jaar) %>% 
@@ -121,27 +141,29 @@ baos_jaar = functiemix_school %>% filter(schooltype == 'bao' & ll_lr_ratio > 5 &
 ggplot(baos_jaar, aes(x = jaar, y = nat_ll_lr_ratio)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() + 
   coord_cartesian(ylim = c(16, 20)) + scale_x_continuous(breaks=2006:2019) + geom_point() + 
   ylab('Landelijke Leerling/Leraar Ratio (LLR)')
-ggplot(baos_jaar, aes(x = jaar, y = leerlingen)) + geom_line() + theme_minimal()
-ggplot(baos_jaar, aes(x = jaar, y = schools)) + geom_line() + theme_minimal() + coord_cartesian(ylim = c(6000, 6500))
-ggplot(baos_jaar, aes(x = jaar, y = leerlingen / managers)) + geom_line() + theme_minimal()
-ggplot(baos_jaar, aes(x = jaar, y = ondersteunend_personeel / schools)) + geom_line() + theme_minimal()
-ggplot(baos_jaar, aes(x = jaar, y = medewerkers / leerlingen)) + geom_line() + theme_minimal()
-ggplot(baos_jaar, aes(x = jaar, y = medewerkers_op_salaris / medewerkers)) + geom_line() + theme_minimal()
-ggplot(baos_jaar, aes(x = jaar, y = leerlingen / medewerkers)) + geom_line() + theme_minimal()
-```
+ggplot(baos_jaar, aes(x = jaar, y = leerlingen)) + geom_line(size = 1.2, colour='grey80') + theme_minimal()+ geom_point() + 
+  ylab('Landelijk totaal aantal leerlingen') + scale_x_continuous(breaks=2006:2019)
+ggplot(baos_jaar, aes(x = jaar, y = schools)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() + coord_cartesian(ylim = c(6000, 6500))+geom_point() + ylab('Landelijke totaal aantal scholen')+ scale_x_continuous(breaks=2006:2019)
+ggplot(baos_jaar, aes(x = jaar, y = leerlingen / managers)) + geom_line(size = 1.2, colour='grey80') + theme_minimal()+  geom_point() + 
+  ylab('Landelijke Leerling/Managers Ratio')+ scale_x_continuous(breaks=2006:2019)
+ggplot(baos_jaar, aes(x = jaar, y = ondersteunend_personeel / schools)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() + geom_point() + 
+  ylab('Landelijke Ondersteunend personeel/scholen Ratio ')+ scale_x_continuous(breaks=2006:2019)
+ggplot(baos_jaar, aes(x = jaar, y = medewerkers / leerlingen)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() + geom_point() + 
+  ylab('Landelijke Medewerkers/Leerlingen Ratio')+ scale_x_continuous(breaks=2006:2019)
+ggplot(baos_jaar, aes(x = jaar, y = medewerkers_op_salaris / medewerkers)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() +geom_point() + 
+  ylab('Landelijke Medewerkers op salaris/Medewerkers Ratio ')+ scale_x_continuous(breaks=2006:2019)
+ggplot(baos_jaar, aes(x = jaar, y = leerlingen / medewerkers)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() +geom_point() + 
+  ylab('Landelijke Leerling/Medewerkers Ratio')+ scale_x_continuous(breaks=2006:2019)
+ggplot(baos_jaar, aes(x = jaar, y = ondersteunend_personeel / leerlingen)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() +geom_point() + 
+  ylab('Landelijke Ondersteunend personeel/Leerling Ratio')+ scale_x_continuous(breaks=2006:2019) + scale_y_continuous(labels = c("1 op 167","1 op 143","1 op 125", "1 op 111","1 op 100"))
 
-```{r}
-baos_2019 %>% filter(
-  gemeente %in% c('AMSTERDAM', 'ROERMOND', 'UTRECHT', 'ROTTERDAM', "'S-GRAVENHAGE", 'EINDHOVEN', 'ZWOLLE'), 
-  ll_lr_ratio > 10, 
-  ll_lr_ratio < 30)  %>% 
-  ggplot(aes(x = fct_reorder(gemeente, ll_lr_ratio, mean), y = ll_lr_ratio)) + geom_violin(fill='grey80') + 
-  theme_minimal() + xlab('') + ylab('LLR')
+ggplot(baos_jaar, aes(x = jaar, y = leerlingen / ondersteunend_personeel)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() +geom_point() + 
+  ylab('Landelijke Ondersteunend personeel/Leerling Ratio')+ scale_x_continuous(breaks=2006:2019)
 ```
-
+Uit deze grafieken blijkt dat het leerlingenaantal sterk is afgenomen in de afgelopen decennium. Daarnaast valt op dat de verhouding tussen het aantal leerlingen en managers juist sterk is toegenomen. Daarnaast zien we een toename in ondersteunend personeel op scholen vanaf 2014. 
 
 # Hoe varieert de leerling/leraar ratio tussen gemeenten?
-We berekenen voor iedere gemeente de gemiddelde leerling/leraar ratios voor alle scholen binnen de gemeente in 2019. Tevens berekenen we automatisch de kwartielen en delen gemeentes in naar die kwartielen en als robuusteidsmaat de fractie van het aantal scholen in de gemeente dat een hogere leerling/leraar ratio heeft dan het landelijk gemiddelde.
+We berekenen voor iedere gemeente de gemiddelde leerling/leraar ratios voor alle scholen binnen de gemeente in 2019. Tevens berekenen we automatisch de kwartielen en delen gemeentes in naar die kwartielen. Verder zal de fractie van het totaal aantal scholen in de gemeente dat een hogere leerling/leraar ratio heeft dan het landelijk gemiddelde worden weergegeven om de getallen in perspectief te zetten. 
 
 ```{r}
 mean_baos_2019 <- baos_2019 %>%
@@ -194,22 +216,22 @@ data %>%
   theme_void()
 ```
 
-Op bovenstaande kaartje zien we de variantie per gemeente. De schaal wordt echter gedomnieerd door uitschieters: gemeentes met zeer grote en kleine groepen. Daarnaast kan het gemeentelijke gemiddelde gedreven worden door uitschieters. Tenslotte zijn we meer geinteresseerd in scholen met hoge ratios dan lage ratios. Daarom maken we een kaart van Nederland waarop de fractie van scholen met ratio's boven het landelijke gemiddelde per gemeente zichbaar is.
+Op bovenstaande kaartje zien we de variantie per gemeente. De schaal wordt echter gedomineerd door uitschieters: gemeentes met zeer grote en kleine groepen. Daarnaast kan het gemeentelijke gemiddelde gedreven worden door uitschieters. Tenslotte zijn we meer geinteresseerd in scholen met hoge ratios dan lage ratios. Daarom maken we een kaart van Nederland waarop de fractie van scholen met ratio's boven het landelijke gemiddelde per gemeente zichbaar is.
 
 ```{r}
 ggplot(data) +
   geom_sf(aes(fill = perc_high_ll_lr_ratio)) +
   labs(title = "% scholen met bovengemiddelde leerling/leraar ratios (per gemeente)") +
-  scale_fill_continuous(type = "viridis") +
+  scale_fill_continuous(type = "viridis") + labs(fill = "% scholen") +
   theme_void()
 ```
 
-Een laatste manier om de verschillende duidelijker zichbaar te maken is om te tonen in welk kwartiel gemeentes vallen:
+Een laatste manier om de verschillen duidelijker zichbaar te maken is om te tonen in welk kwartiel gemeentes vallen:
 
 ```{r}
 ggplot(data) +
   geom_sf(aes(fill = ll_lr_ratio_cut)) +
-  labs(title = "ll_lr_ratio_cut", fill = "") +
+  labs(title = "LLR (per gemeente) ingedeeld in kwartielen ", fill = "") +
   scale_fill_brewer(palette = 'Reds') +
   theme_void()
 ```
@@ -234,9 +256,6 @@ De gemeentes met de minste scholen met bovengemiddelde leerling/leraar ratios:
 
 ```{r}
 data %>% sort_means_table(sort_var = perc_high_ll_lr_ratio)
-
-
-
 ```
 
 En de scores van de G5 onder elkaar:
@@ -244,7 +263,7 @@ En de scores van de G5 onder elkaar:
 ```{r}
 nat_gem <- sum(baos_2019$leerlingen) / sum(baos_2019$onderwijzers) 
 g5_data <- data %>% sort_means_table(sort_var = desc(perc_high_ll_lr_ratio)) %>%
-  filter(statnaam %in% c('Amsterdam', 'Utrecht', 'Eindhoven', 'Rotterdam', "'s-Gravenhage", "Zwolle", "Roermond")) %>%
+  filter(statnaam %in% c('Amsterdam', 'Utrecht', 'Almere', 'Rotterdam', "'s-Gravenhage", "Zwolle", "Roermond")) %>%
   add_row(statnaam = 'Landelijk', mean_ll_lr_ratio = nat_gem) 
 
 ggplot(g5_data, aes(x = fct_reorder(statnaam, mean_ll_lr_ratio, mean), y = mean_ll_lr_ratio)) + 
@@ -252,10 +271,10 @@ ggplot(g5_data, aes(x = fct_reorder(statnaam, mean_ll_lr_ratio, mean), y = mean_
   theme(text = element_text(size=15), axis.text.x = element_text(angle=45, hjust=1))
 ```
 
-Deze cijfers bevestigen de analyse hierboven: de grootste gemeenten hebben evenveel of meer docenten per leerling als landelijk gemiddeld.
+Deze cijfers bevestigen de analyse hierboven: de grootste gemeenten hebben evenveel of meer docenten per leerling dan landelijk gemiddeld.
 
 # Hoe heeft het aantal docenten zich ontwikkeld t.o.v. het aantal leerlingen?
-Het Ministerie van Onderwijs schetst in haar ramingen een steeds groeiend tekort. Hoe heeft het aantal docenten zich ontwikkeld in verhouding met het aantal leerlingen? Daarvoor berekenen we dezelfde statistieken als hierboven voor het jaar 2009 en vergelijken de totaalaantallen met het jaar 2019:
+Het Ministerie van Onderwijs schetst in haar ramingen een steeds groeiend tekort. Hoe heeft het aantal docenten zich ontwikkeld in verhouding met het aantal leerlingen? Daarvoor berekenen we dezelfde statistieken als hierboven voor het jaar 2009 en vergelijken de totaal aantallen met het jaar 2019:
 
 ```{r}
 baos_2009 = baos %>% filter(jaar == 2009)
@@ -289,7 +308,7 @@ round(unlist(tot_2019) / unlist(tot_2009), 2)
 
 Bovenstaande tabellen laten zien dat het PO is gekrompen in het laatste decennium. Het aantal leerlingen is iets harder gezakt dan het aantal docenten. Daardoor is leraar-leerling ratio is landelijk 3% toegenomen. Dat staat gelijk aan een halve leerling extra voor iedere docent. Het is echter opvallend dat het aantal scholen niet is meebewogen: de gemiddelde basisschool is 10% kleiner dan 10 jaar geleden. 
 
-Deze leerling-leraar ratio heeft zich echter niet gelijk ontwikkeld in verschillende gemeentes. Dat maken we inzichtelijk door de delta per gemeente zichbaar te maken:
+Deze leerling-leraar ratio heeft zich echter niet gelijk ontwikkeld in verschillende gemeentes. Dat maken we inzichtelijk door de verandering per gemeente zichbaar te maken:
 
 ```{r}
 mean_baos_2009 <- baos_2009 %>%
@@ -315,20 +334,22 @@ data %>% sort_changes_table(sort_var = desc(change_ll_lr_ratio)) %>%
   filter(statnaam %in% c('Amsterdam', 'Utrecht', 'Eindhoven', 'Rotterdam', "'s-Gravenhage"))
 ```
 
-In Amsterdam zijn de klassen gegroeid met 18%. In 2009 scoorde Amsterdam ruim onder het landelijk gemiddelde; in 2019 rond het landelijke gemiddelde. Hetzelfde geldt voor Den Haag en Rotterdam. Utrecht en Eindhoven hebben verhoudingsgewijs geen verandering gezien en hebben verhoudingsgewijs ruim meer docenten dan landelijk gemiddeld. Andere gemeenten hebben een explosieve groei van de verhouding leerling-leraar:
+In Amsterdam zijn de klassen gegroeid met 18%. In 2009 scoorde Amsterdam ruim onder het landelijk gemiddelde; in 2019 rond het landelijke gemiddelde. Hetzelfde geldt voor Den Haag en Rotterdam. Utrecht en Eindhoven hebben verhoudingsgewijs geen verandering gezien en hebben verhoudingsgewijs ruim meer docenten dan landelijk gemiddeld. 
+
+Als we naar de andere gemeenten gaan kijken, zien we dat er gemeenten zijn met een explosieve groei van de verhouding leerling-leraar: 
 
 ```{r}
 data %>% sort_changes_table(sort_var = desc(change_ll_lr_ratio))
 ```
 
-Daar staan gemeentes tegenover waar er juist relatief meer docenten bij zijn gekomen:
+Daar staan gemeenten tegenover waar er juist relatief meer docenten bij zijn gekomen:
 
 ```{r}
 data %>% sort_changes_table(sort_var = change_ll_lr_ratio)
 ```
 
 # Kunnen tekorten bij gemeenten worden opgelost met herverdeling?
-De trend in de landelijke leerling-leraar ratio kan samengevat worden als stabiel op landelijk niveau met grote verschillen op lokaal niveau. Docenten uit Haaksbergen, Lopik, Wormerland en Bronckhorst stonden in 2009 nog over grotere klassen dan landelijk gemiddeld maar in 2019 voor de kleinste klassen van Nederland. Het omgekeerde geldt voor docenten uit Boekel, Diemen en Delfzijl.
+De trend in de landelijke leerling-leraar ratio kan samengevat worden als stabiel op landelijk niveau met grote verschillen op lokaal niveau. Docenten uit Haaksbergen, Lopik, Wormerland en Bronckhorst stonden in 2009 nog voor grotere klassen dan landelijk gemiddeld maar in 2019 voor de kleinste klassen van Nederland. Het omgekeerde geldt voor docenten uit Boekel, Diemen en Delfzijl.
 
 We sluiten de analyse af met een vraag: als we leraren in het PO opnieuw zouden mogen verdelen over basisscholen, hoeveel docenten zouden moeten verhuizen naar een nieuwe gemeente om de lokale verschillen tussen gemeentes gelijk te trekken?
 
@@ -389,14 +410,24 @@ data %>% as_tibble() %>%
   arrange(desc(perc_leraar_overschot_tekort))
 ```
 
+Bovenstaande tabellen geven aan welke gemeenten absoluut en procentueel gezien het grootste tekort/overschot hebben. 
 
 ```{r}
-ggplot(data, aes(x = leraar_overschot_tekort, binwidth = 20)) + geom_histogram() + theme_minimal()
-summary(data$perc_leraar_overschot_tekort)
+ggplot(data, aes(x = leraar_overschot_tekort, binwidth = 20)) + geom_histogram() + theme_minimal()+ labs(x = "Leraren overschot/tekort", y = "Aantal scholen")
+summary(data$perc_leraar_overschot_tekort) 
 ```
 
 # Kunnen tekorten binnen gemeenten worden opgelost met herverdeling?
-In bovenstaande analyse komt  de verdeling tussen gemeentes aan bod. Het merendeel van ongelijkheid tussen scholen bestaat echter binnen gemeentes. Driekwart van de ongelijkheid bestaat niet tussen maar binnen gemeentes. In de onderstaande analyse rekenen we per gemeente uit hoeveel FTE herverdeeld zou moeten worden tussen scholen om gelijke groepsgroottes te realiseren. De conclusie is dat als 4.487 FTE - 6% van alle basisschooldocenten - werk zou vinden bij scholen in de eigen gemeente met een tekort, dat de ongelijkheid in leerling-leraar ratios binnen gemeentes op zou heffen. 
+In bovenstaande analyse komt  de verdeling tussen gemeentes aan bod. Het merendeel van ongelijkheid tussen scholen bestaat echter binnen gemeentes. Driekwart van de ongelijkheid bestaat niet tussen maar binnen gemeentes. 
+
+```{r}
+
+```
+
+Uit deze violinplot kan worden opgemaakt dat er grote variantie binnen gemeenten zit en minder variantie tussen steden. 
+
+## FTE verplaatsing binnen gemeenten 
+In de onderstaande analyse rekenen we per gemeente uit hoeveel FTE herverdeeld zou moeten worden tussen scholen om gelijke groepsgroottes te realiseren. De conclusie is dat als 4.487 FTE - 6% van alle basisschooldocenten - werk zou vinden bij scholen in de eigen gemeente met een tekort, dat de ongelijkheid in leerling-leraar ratios binnen gemeentes op zou heffen. 
 
 ```{r}
 lokale_herverdeling_data = baos_2019 %>%
@@ -406,7 +437,7 @@ lokale_herverdeling_data = baos_2019 %>%
   perc_leraar_overschot_tekort = (leraar_overschot_tekort / onderwijzers) * 100
   ) %>% summarise(
   fte_verplaatsing = sum(leraar_overschot_tekort[leraar_overschot_tekort > 0]),
-  perc_fte_verplaatsing = fte_verplaatsing / sum(onderwijzers)
+  perc_fte_verplaatsing = fte_verplaatsing / sum(onderwijzers) * 100 
 )
 
 data <-
@@ -423,16 +454,18 @@ ggplot(data) +
   geom_sf(aes(fill = perc_fte_verplaatsing)) +
   labs(title = "% van FTE verplaatst voor gelijke verdeling (per gemeente)", fill = "") +
   scale_fill_continuous(type = "viridis") +
-  theme_void()
+  theme_void() + labs(fill = "% FTE")
 ```
 
-Er zijn substantiele verschillen tussen 
+De kaart hierboven laat zien dat in absolute getallen voornamelijk herverdeling plaats moet vinden in Rotterdam, Den Haag, Utrecht en Amsterdam. Als je dit echter afzet tegen het totaal aantal FTE in deze gemeenten, dan blijkt dat deze gemeenten er niet langer uitspringen. 
 
 ```{r}
 
-ggplot(data, aes(x = perc_fte_verplaatsing)) + geom_histogram(bins = 20) + theme_minimal()
+ggplot(data, aes(x = perc_fte_verplaatsing)) + geom_histogram(bins = 20) + theme_minimal() + labs(y = "Aantal scholen", x= "Percentage FTE verplaatst")
 
 ```
+
+Onderstaande tabellen laten zien welke gemeentes procentueel en absoluut gezien de grootste herverdeling moeten toepassen om gelijkheid in leerling/leraar-ratios te realiseren. Absoluut gezien zijn het voornamelijk de grote steden die veel moeten gaan schuiven met FTE als ze naar een gelijke verdeling van leerling/leraar-ratios willen streven. Dit kan worden verklaard door het feit dat deze steden ook meer FTE in totaal hebben. 
 
 ```{r}
 
@@ -446,8 +479,12 @@ data %>% as_tibble() %>%
 
 ```
 
+# Leerling/leraar ratios in relatie tot het percentage gewichtsleerlingen 
+Als laatst is er nog gekeken naar het verband tussen het aantal gewichtsleerlingen op een school en het leerling/leraar  ratio. Hieruit blijkt dat het leerling/leraar-ratio afneemt naarmate het percentage gewichtsleerlingen toeneemt. 
+
 ```{r}
 baos_2018 = baos %>% filter(jaar == 2018 & perc_gewicht > 0)
-ggplot(baos_2018, aes(x = perc_gewicht, y = ll_lr_ratio)) + geom_point() + stat_smooth(method='lm') + theme_minimal()
+ggplot(baos_2018, aes(x = perc_gewicht, y = ll_lr_ratio)) + geom_point() + stat_smooth(method='lm') + theme_minimal() + labs(x= "Percentage gewichtsleerlingen", y = 'Leerling/Leraar ratio (LLR)')
+summary(lm(data=baos_2018, ll_lr_ratio~perc_gewicht))
 
 ```

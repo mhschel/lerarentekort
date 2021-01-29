@@ -159,7 +159,7 @@ baos_2019_schoolgewicht = baos_2019  %>% mutate(
    percentage_11_12 = (schaal_11 + schaal_12) / onderwijzers
 )
 
-ggplot(baos_2019_schoolgewicht, aes(gem_loonsom, schoolweging)) +
+ggplot(baos_2019, aes(gem_loonsom, schoolweging)) +
   geom_bin2d(bins=100) + theme_minimal() + labs(fill = "Aantal scholen") +
   labs(x = 'Gemiddelde Loonsom', y = 'Schoolgewicht')
 
