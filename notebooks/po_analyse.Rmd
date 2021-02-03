@@ -139,6 +139,13 @@ baos_2019 %>% filter(
   theme_minimal() + xlab('') + ylab('LLR')
 ```
 
+```{r}
+baos_2019 %>% mutate(weging_groep = cut(schoolweging, breaks = c(0, 25, 30, 35, 100))) %>% na.omit() %>%
+  group_by(weging_groep) %>% summarise(mean_llr = mean(ll_lr_ratio)) %>% 
+  ggplot(aes(x = weging_groep, y = mean_llr)) + geom_bar(stat='identity') + coord_cartesian(ylim = c(10,20)) +
+  scale_x_discrete(labels = c("25-", '25 - 30', '30 - 35', '35+')) + theme_minimal() + xlab('Schoolweging') + ylab('Gemiddelde LLR')
+```
+
 
 # Hoe varieert de leerling/leraar ratio tussen gemeenten?
 We berekenen voor iedere gemeente de gemiddelde leerling/leraar ratios voor alle scholen binnen de gemeente in 2019. Tevens berekenen we automatisch de kwartielen en delen gemeentes in naar die kwartielen en als robuusteidsmaat de fractie van het aantal scholen in de gemeente dat een hogere leerling/leraar ratio heeft dan het landelijk gemiddelde.
@@ -427,6 +434,13 @@ ggplot(data) +
 ```
 
 Er zijn substantiele verschillen tussen 
+
+```{r}
+mean(baos_2019$gem_loonsom)
+data %>% arrange(desc(fte_verplaatsing)) %>% mutate(bedrag = fte_verplaatsing * 525 * 12) %>% select(statnaam, bedrag)
+sum(data$fte_verplaatsing, na.rm = T)
+```
+
 
 ```{r}
 
