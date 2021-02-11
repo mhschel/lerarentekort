@@ -77,8 +77,16 @@ In deze analyse focussen we op het PO. We selecteren dus alle reguliere basissch
 
 ```{r}
 library(readxl)
-schoolgewicht <- read_excel("../data_files/schoolweging-2017-2019.xlsx", sheet="Tabel 3") %>%
-  select(brin=`Tabel 3`, schoolweging= `...4`) %>% slice(-(1:4)) %>% mutate(schoolweging = as.numeric(schoolweging))
+schoolgewicht_17 <- read_excel("../data_files/schoolweging-2017-2019.xlsx", sheet="Tabel 1") %>%
+  select(brin=`Tabel 1`, schoolweging= `...4`) %>% slice(-(1:4)) %>% mutate(schoolweging= as.numeric(schoolweging), jaar=2017)
+
+schoolgewicht_18 <- read_excel("../data_files/schoolweging-2017-2019.xlsx", sheet="Tabel 2") %>%
+  select(brin=`Tabel 2`, schoolweging= `...4`) %>% slice(-(1:4)) %>% mutate(schoolweging= as.numeric(schoolweging), jaar=2018)
+
+schoolgewicht_19 <- read_excel("../data_files/schoolweging-2017-2019.xlsx", sheet="Tabel 3") %>%
+  select(brin=`Tabel 3`, schoolweging= `...4`) %>% slice(-(1:4)) %>% mutate(schoolweging= as.numeric(schoolweging), jaar=2019)
+
+schoolgewicht <- rbind(schoolgewicht_17, schoolgewicht_18, schoolgewicht_19)
 
 balans_overzicht <- read_excel("../data_files/01-balans-2015-2019.xlsx") %>% filter(Sector == "PO") %>%
   mutate(
@@ -103,9 +111,11 @@ inkomsten_data <- read.csv("../data_files/inkomsten_po.csv", sep=",") %>% group_
 De verschillende datasets moeten worden samengevoegd tot een dataset. Dit zal de dataset zijn waar we in de rest van de analyse mee zullen werken. 
 
 ```{r}
-baos = functiemix_school %>% filter(schooltype == 'bao' & ll_lr_ratio > 5 & ll_lr_ratio < 50) %>% left_join(balans_overzicht, by=(c("bevoegd_gezag" = "bevoegd_gezag", "jaar" = "Jaar"))) %>% left_join(leeftijd_data, by=(c('brin' = "brin", "jaar"="jaar"))) %>% left_join(inkomsten_data, by=(c("jaar"="jaar", "brin"="brin")))
+baos = functiemix_school %>% filter(schooltype == 'bao' & ll_lr_ratio > 5 & ll_lr_ratio < 50) %>% left_join(balans_overzicht, by=(c("bevoegd_gezag" = "bevoegd_gezag", "jaar" = "Jaar"))) %>% left_join(leeftijd_data, by=(c('brin' = "brin", "jaar"="jaar"))) %>% left_join(inkomsten_data, by=(c("jaar"="jaar", "brin"="brin"))) %>% left_join(schoolgewicht, by = c("brin", "jaar")) %>% group_by(jaar, bevoegd_gezag) %>% mutate(
+  vermogen_ll = vermogen / sum(leerlingen)
+) 
 
-baos_2019 = baos %>% filter(jaar == 2019) %>% left_join(schoolgewicht) 
+baos_2019 = baos %>% filter(jaar == 2019) 
 
 ggplot(baos_2019, aes(x = ll_lr_ratio)) + geom_histogram() + theme_minimal() + labs(x = "LLR", y = "Aantal scholen")
 ```
@@ -114,8 +124,7 @@ ggplot(baos_2019, aes(x = ll_lr_ratio)) + geom_histogram() + theme_minimal() + l
 populatie_weging <- lm(data=baos_2019 %>% mutate(oab_ll = oab/leerlingen, kleine_school_ll = kleine_schooltoeslag / leerlingen), ll_lr_ratio~oab_ll+kleine_school_ll)
 summary(populatie_weging)
 
-baos_2019$gewogen_llr = baos_2019$ll_lr_ratio + -1.672e-03 *(baos_2019$oab/baos_2019$leerlingen) + -1.666e-03*(baos_2019$kleine_schooltoeslag/baos_2019$leerlingen)
-
+baos_2019$gewogen_llr = baos_2019$ll_lr_ratio + 1.672e-03 *(baos_2019$oab/baos_2019$leerlingen)  + 1.666e-03*(baos_2019$kleine_schooltoeslag/baos_2019$leerlingen)
 
 ```
 
@@ -488,6 +497,8 @@ data %>% as_tibble() %>%
 data %>% as_tibble() %>% 
   select(statnaam, fte_verplaatsing, perc_fte_verplaatsing) %>% 
   arrange(desc(perc_fte_verplaatsing))
+
+sum(data$fte_verplaatsing[data$fte_verplaatsing], na.rm=T)
 
 ```
 
