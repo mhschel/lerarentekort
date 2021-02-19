@@ -96,13 +96,13 @@ Om er achter te komen wat dan wel van invloed is op de gemiddelde loonsom zijn w
 ## Invloed groepsgrootte en schoolgewicht
 ```{r}
 library(ggplot2) 
-ggplot(baos_2019, aes(gem_loonsom, ll_lr_ratio)) +
-  theme_minimal() + labs(fill = "Aantal scholen") + geom_bin2d(bins=100) +
-  labs(x = 'Gemiddelde Loonsom', y = 'LLR')
+ggplot(baos_2019 %>% filter(gewogen_llr > 0), aes(gem_loonsom, gewogen_llr)) +
+  geom_bin2d(bins=100) + theme_minimal() + labs(fill = "Aantal scholen") +
+  labs(x = 'Gemiddelde Loonsom', y = 'Gewogen Leerling/Leraar-ratio')
 
 ggplot(baos_2019, aes(gem_loonsom, schoolweging)) +
   geom_bin2d(bins=100) + theme_minimal() + labs(fill = "Aantal scholen") +
-  labs(x = 'Gemiddelde Loonsom', y = 'Schoolgewicht')
+  labs(x = 'Gemiddelde Loonsom', y = 'Schoolweging')
 
 summary(lm(data=baos_2019, gem_loonsom~ll_lr_ratio))
 summary(lm(data=baos_2019, gem_loonsom~schoolweging))
@@ -145,6 +145,7 @@ baos_2019_besturen <- baos_2019 %>%
     leraar_overschot_tekort_bestuur = sum(leraar_overschot_tekort), 
     gem_loonsom = mean(gem_loonsom),
     vermogen_bestuur = mean(vermogen),
+    totaal_leerlingen = sum(leerlingen),
     vermogen_leerling = mean(vermogen)/sum(leerlingen)
   ) 
 
@@ -201,5 +202,4 @@ schaal_data$gem_loonsom_verschil = schaal_data$gem_loonsom - predict(salaris_mod
 
 ggplot(schaal_data, aes(x = gem_loonsom_verschil)) + geom_histogram() + theme_minimal() + labs(x = "Salarisdifferentiatie", y = "Aantal scholen")
 ```
-
 
