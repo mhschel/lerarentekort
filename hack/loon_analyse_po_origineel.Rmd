@@ -1,0 +1,205 @@
+---
+title: "Loon analyse (PO)"
+output: 
+  html_document:
+    fig_width: 8
+    fig_height: 6
+    message: FALSE
+    warning: FALSE
+    df_print: paged
+---
+
+Dit is een R Notebook. Deze gaat er vanuit dat je beschikt over de R Notebook 'po_analyse.Rmd'. 
+
+Voor het project lerarentekort PO hebben wij gekeken naar de verloning van onderwijzers in het PO in aanvulling op de PO analyse van het leerling/leraar ratio. Hierbij waren we voornamelijk geintereseerd in het in kaart brengen van de verbanden tussen verschillende factoren en de gemiddelde loonsom. In dit onderzoek zal dezelfde data worden gebruikt als in 'po_analyse.Rmd'. 
+
+# Abstract
+In deze analyse wordt voornamelijk gekeken naar de verloning van leraren in het PO, als aanvulling op de empirische PO analyse van de verhouding van leerlingaantallen en leraren overtijd. Hierbij wordt gebruik gemaakt van openbare data van het CBS en DUO. Ten eerste bleek uit de analyse dat er geen geografisch patroon zit in de verloning in het PO. Daarnaast bleek ook dat er geen verband was met schoolgewicht en het leerling/leraar-ratio. Het verband met leeftijd daarentegen was wel duidelijk zichtbaar, leeftijd kan zelfs meer dan 70 procent van de verschillen in gemiddelde loonsom verklaren. Daarnaast was er ook een significant verband met het percentage leraren in schaal 11 of 12 zichtbaar. Verder bleek dat vermogen en (onderwijsachterstand)bekostiging geen noemenswaardige invloed hadden op de gemiddelde loonsom. Op basis van deze bevindingen, is nog gekeken naar de salarisdifferentiatie voor leraren. Hieruit bleek dat de salarisdifferentiatie minimaal is als er wordt gecontroleerd voor leeftijd en salarisschaal. 
+
+# Verdeling gemiddelde loonsom in PO
+Overzicht van de verdeling van de gemiddelde loonsom op scholen in het PO. 
+
+```{r}
+ggplot(baos_2019, aes(x = gem_loonsom)) + geom_histogram() + theme_minimal() + labs(x = "Gemiddelde Loonsom", y = "Aantal scholen", title="Verdeling Gemiddelde Loonsom")
+
+summary(baos_2019$gem_loonsom)
+```
+
+# Geografische patronen in verloning
+Eerst zal er een analyse van de geografische verschillen in gemiddelde loonsom plaatsvinden. Voor iedere gemeente zal de gemiddelde loonsom worden berekend op basis van de gemiddelde loonsom van de scholen in die gemeente. Vervolgens zullen deze in kaart worden gebracht. Zowel de gemiddelde loonsom per gemeente voor 2019 als voor 2014 zal is berekend. Tevens zal er gekeken worden naar de verandering in gemiddelde loonsom tussen 2014 en 2019. 
+
+```{r}
+gemeente_lonen_2019 = baos_2019 %>% 
+  group_by(statcode) %>% summarise(
+    totaal_loonsom = sum(loonsom), 
+    totaal_onderwijzers = sum(onderwijzers),
+    gemiddeld_loonsom = totaal_loonsom / totaal_onderwijzers,
+    )
+
+gemeente_lonen_2014 = baos %>% filter(jaar==2014) %>% 
+  group_by(statcode) %>% mutate(
+    totaal_loonsom = sum(loonsom), 
+    totaal_onderwijzers = sum(onderwijzers),
+    gemiddeld_loonsom = totaal_loonsom / totaal_onderwijzers,
+    )
+
+ontwikkeling_loon_gemeente = baos %>%  filter(jaar == 2014 | jaar == 2019) %>% group_by(statcode, brin)  %>%
+   summarise(
+     dif_loon_school = gem_loonsom[jaar==2019] - gem_loonsom[jaar==2014] 
+   ) %>% group_by(statcode) %>%
+  summarise(
+    gem_gemeente = mean(dif_loon_school)
+  )
+
+library(sf)
+gemeentegrenzen <- st_read("https://geodata.nationaalgeoregister.nl/cbsgebiedsindelingen/wfs?request=GetFeature&service=WFS&version=2.0.0&typeName=cbs_gemeente_2019_gegeneraliseerd&outputFormat=json")
+
+data <-
+  gemeentegrenzen %>%
+  left_join(gemeente_lonen_2019)
+
+data %>%
+  ggplot() +
+  geom_sf(aes(fill = gemiddeld_loonsom)) +
+  scale_fill_viridis_c(limits=c(2700, 4000)) +
+  labs(title = "Gemiddelde Loonsom 2019 (per gemeente)", fill = "") +
+  theme_void()
+
+data <-
+  gemeentegrenzen %>%
+  left_join(gemeente_lonen_2014)
+
+data %>%
+  ggplot() +
+  geom_sf(aes(fill = gemiddeld_loonsom)) +
+  scale_fill_viridis_c(limits=c(2700, 4000)) +
+  labs(title = "Gemiddelde Loonsom 2014 (per gemeente)", fill = "") +
+  theme_void()
+
+data <-
+  gemeentegrenzen %>%
+  left_join(ontwikkeling_loon_gemeente)
+
+data %>%
+  ggplot() +
+  geom_sf(aes(fill = gem_gemeente)) +
+  scale_fill_viridis_c() +
+  labs(title = "Verandering Loonsom 2014-2019 (per gemeente)", fill = "") +
+  theme_void()
+```
+
+Uit deze analyse blijkt dat er geen grote verschillen in gemiddelde loonsom zitten tussen gemeentes. Dit geldt voor zowel 2014 als 2019. Verder blijkt dat hetzelfde geldt als je kijkt naar de verandering in loonsom in de periode 2014-2019. Gemeenten met hogere kosten van levensonderhoud betalen hun onderwijzers dus niet meer dan andere gemeenten. 
+
+# Verbanden met Gemiddeld loonsom 
+Om er achter te komen wat dan wel van invloed is op de gemiddelde loonsom zijn we gaan kijken naar andere factoren zoals leerling/leraar-ratio, schoolgewicht, gemiddelde leeftijd van de onderwijzers, salarisschalen, vermogen en inkomstenbronnen. Vermogen van een school is alleen bekend op bestuurlijk niveau. Om te compenseren voor verschillen in leerlingaantallen, hebben we het vermogen per leerling berekend per bestuur. 
+
+## Invloed groepsgrootte en schoolgewicht
+```{r}
+library(ggplot2) 
+ggplot(baos_2019, aes(gem_loonsom, ll_lr_ratio)) +
+  theme_minimal() + labs(fill = "Aantal scholen") + geom_bin2d(bins=100) +
+  labs(x = 'Gemiddelde Loonsom', y = 'LLR')
+
+ggplot(baos_2019, aes(gem_loonsom, schoolweging)) +
+  geom_bin2d(bins=100) + theme_minimal() + labs(fill = "Aantal scholen") +
+  labs(x = 'Gemiddelde Loonsom', y = 'Schoolweging')
+
+summary(lm(data=baos_2019, gem_loonsom~ll_lr_ratio))
+summary(lm(data=baos_2019, gem_loonsom~schoolweging))
+```
+
+In de bovenstaande figuren is het verband tussen het leerling/leraar ratio en schoolgewicht weergegeven. Hieruit blijkt ten eerste dat er geen verband is tussen de gemiddelde loonsom en het leerling/leraar ratio. Scholen met minder leraren betalen hun leerkrachten dus gemiddeld niet meer dan leerlingen met relatief veel leraren. Daarnaast blijkt ook schoolgewicht geen effect te hebben op de gemiddelde loonsom. De lineaire regressie van schoolgewicht indiceert zelfs een licht negatief verband tussen schoolgewicht en gemiddelde loonsom. Belangrijk is om hierbij wel in acht te nemen dat dit verband niet significant is. 
+
+## Invloed gemiddelde leeftijd leraren en salarisschalen 
+Vervolgens zal er worden gekeken naar de invloed van de gemiddelde leeftijd en het percentage leerkrachten dat in schaal 11 of 12 zit op de gemiddelde loonsom. Het percentage leerkrachten dat in schaal 11 of 12 zit is berekend als fractie van het totale FTE op een school.  
+```{r}
+schaal_data = baos_2019 %>% mutate(
+  percentage_11 = schaal_11 / onderwijzers,
+  percentage_11_12 = (schaal_11 + schaal_12)/ onderwijzers
+) 
+
+ggplot(baos_2019, aes(gem_loonsom, leeftijd )) +
+  geom_bin2d(bins=100) + theme_minimal() + labs(fill = "Aantal scholen") +
+  labs(x = 'Gemiddelde Loonsom', y = 'Gemiddelde Leeftijd')
+
+ggplot(schaal_data, aes(gem_loonsom, percentage_11_12 * 100)) +
+  geom_bin2d(bins=100) + theme_minimal() + labs(fill = "Aantal scholen") +
+  labs(x = 'Gemiddelde Loonsom', y = 'Percentage Schaal 11 of 12')
+
+summary(lm(data=baos_2019, gem_loonsom~leeftijd))
+summary(lm(data=schaal_data, gem_loonsom~percentage_11_12))
+```
+
+Opvallend in deze figuren is het sterke verband tussen de gemiddelde leeftijd en de gemiddelde loonsom. Meer dan 70 procent van de variantie in gemiddelde loonsom kan worden verklaard door de gemiddelde leeftijd van de onderwijzers. Daarnaast is er ook een verband zichtbaar tussen gemiddelde loonsom en het percentage leraren dat in schaal 11 of schaal 12 zit. 
+
+## Invloed vermogen en inkomsten 
+Als laatste zal er gekeken worden naar de invloed van vermogen en inkomsten op het gemiddelde loon. Hierbij zijn de scholen gegroepeerd op bestuur. Het totale vermogen van het bestuur is vervolgens gedeeld door het totale aantal leerlingen dat onder dat bestuur valt om het vermogen per leerling te berekenen. In de dataset is voor elke school het vermogen van het bestuur opgenomen, het totale vermogen van een bestuur zal daarom gelijk zijn aan het gemiddelde van de vermogens van alle scholen die onder dat bestuur vallen. 
+
+```{r}
+baos_2019_besturen <- baos_2019 %>% 
+  mutate(
+     diff_nl = ll_lr_ratio - (sum(leerlingen)/ sum(onderwijzers)),
+    leraar_overschot_tekort = onderwijzers - (leerlingen / (sum(leerlingen) / sum(onderwijzers)))
+  ) %>% group_by(bevoegd_gezag) %>% summarise(
+    per_leraar_tekort = (sum(leraar_overschot_tekort) / sum(onderwijzers)) *100,
+    leraar_overschot_tekort_bestuur = sum(leraar_overschot_tekort), 
+    gem_loonsom = mean(gem_loonsom),
+    vermogen_bestuur = mean(vermogetgen),
+    totaal_leerlingen = sum(leerlingen),
+    vermogen_leerling = mean(vermogen)/sum(leerlingen)
+  ) 
+
+require(scales)
+ggplot(baos_2019_besturen %>% filter(vermogen_leerling < 150000), aes(gem_loonsom, vermogen_leerling)) +
+  geom_bin2d(bins=100) + theme_minimal() + labs(fill = "Aantal besturen") +
+  labs(x = 'Gemiddelde Loonsom', y = 'Vermogen per Leerling') + scale_y_continuous(labels = comma)
+
+ggplot(baos_2019, aes(gem_loonsom, oab / leerlingen)) +
+  geom_bin2d(bins=100) + theme_minimal() + labs(fill = "Aantal scholen") +
+  labs(x = 'Gemiddelde Loonsom', y = 'Achterstandsmiddelen per leerling') + scale_y_continuous(labels = comma)
+
+ggplot(baos_2019, aes(gem_loonsom, (totaal_bekostiging / leerlingen))) +
+  geom_bin2d(bins=100) + theme_minimal() + labs(fill = "Aantal scholen") +
+  labs(x = 'Gemiddelde Loonsom', y = 'Totale bekostiging per leerling') + scale_y_continuous(labels = comma) + ylim(0,15000)
+
+summary(lm(data=baos_2019_besturen, gem_loonsom~vermogen_leerling))
+summary(lm(data=baos_2019 %>% mutate(oab_l = oab / leerlingen), gem_loonsom~oab_l))
+summary(lm(data=baos_2019 %>% mutate(totaal_leerling = totaal_bekostiging / leerlingen), gem_loonsom~totaal_leerling))
+```
+In de eerste plot die het verband tussen de gemiddelde loonsom en het vermogen per leerling weergeeft, is geen duidelijk patroon zichtbaar. Dit duidt erop dat er geen sterk verband zitten tussen de twee variabelen. Vermogende besturen betalen hun leraren dus niet meer dan scholen met minder vermogen. 
+
+Daarnaast is ook tussen de gemiddelde loonsom en de onderwijsachterstanden bekostiging geen sterk verband te zien. Hetzelfde geld voor de totale bekostiging per leerling. Beide variabelen zijn wel significant, maar hebben een miniscule invloed op de gemiddelde loonsom. 
+
+# Verdere analyse verband lerarentekort en gemiddelde loonsom
+Het leerling/leraar ratio (LLR) kan ook worden gebruikt als een indicatie voor het lerarentekort. Hierbij is een LLR onder het landelijk gemiddelde een indicatie voor een lerarenoverschot een een LLR boven het landelijk gemiddelde een aanwijzing voor een lerarentekort. Op basis van deze indicator kan er gekeken worden naar zowel het absolute lerarentekort/overschot als naar het procentueel lerarenoverschot/tekort. 
+```{r}
+school_herverdeling_data = baos_2019 %>% 
+  mutate(
+    diff_nl = ll_lr_ratio - (sum(leerlingen)/ sum(onderwijzers)),
+    leraar_overschot_tekort = onderwijzers - (leerlingen / (sum(leerlingen) / sum(onderwijzers))),
+    perc_leraar_overschot_tekort = (leraar_overschot_tekort / onderwijzers) * 100
+  )
+
+ggplot(school_herverdeling_data, aes(gem_loonsom, leraar_overschot_tekort)) +
+  theme_minimal() + labs(fill = "Aantal scholen") + geom_bin2d(bins=100) +
+  labs(x = 'Gemiddelde Loonsom', y = 'Absoluut lerarentekort/overschot')
+
+ggplot(school_herverdeling_data, aes(gem_loonsom, perc_leraar_overschot_tekort)) +
+  theme_minimal() + labs(fill = "Aantal scholen") + geom_bin2d(bins=100) +
+  labs(x = 'Gemiddelde Loonsom', y = 'Procentueel lerarentekort/overschot')
+
+
+
+```
+Bovenstaande figuren indiceren geen verband tussen de gemiddelde loonsom en het lerarentekort/overschot, zowel absoluut als procentueel. 
+
+# Inzage salarisdifferentiatie 
+Om de salarisdifferentiatie van leraren beter in beeld te brengen, hebben we het gemiddelde salaris gecorrigeerd voor leeftijd en het percentage leraren in schaal 11 en 12. Uit de histogram van de gecorrigeerde gemiddelde loonsom komt naar voren dat er weinig salarisdifferentiatie plaatsvindt. 
+```{r}
+salaris_model <- lm(data=schaal_data, gem_loonsom~leeftijd+percentage_11_12)
+
+schaal_data$gem_loonsom_verschil = schaal_data$gem_loonsom - predict(salaris_model, schaal_data)
+
+ggplot(schaal_data, aes(x = gem_loonsom_verschil)) + geom_histogram() + theme_minimal() + labs(x = "Salarisdifferentiatie", y = "Aantal scholen")
+```
+
