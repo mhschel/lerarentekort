@@ -1,0 +1,57 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown]
+
+#Vermogen scholen 
+```{r}
+baos_2019_vermogen <- baos_2019 %>% group_by(bevoegd_gezag) %>% summarise(
+    vermogen_bestuur = mean(vermogen),
+    totaal_leerlingen = sum(leerlingen),
+    vermogen_leerling = mean(vermogen)/sum(leerlingen)
+  ) %>% filter(vermogen_leerling >3000)
+
+hist(baos_2019_vermogen$vermogen_leerling[baos_2019_vermogen$vermogen_leerling > 3000])
+head(baos_2019_vermogen)
+
+sum(baos_2019_vermogen$vermogen_bestuur) - (2100 * sum(baos_2019_vermogen$totaal_leerlingen))
+mean(baos_2019$vermogen_ll, na.rm=T)
+sum(baos_2019$totaal_bekostiging, na.rm=T)
+
+
+```
+
+# Kleine scholen toeslag 
+```{r}
+library(readxl)
+opheffings_norm <- read_excel("../data_files/opheffingsnorm_po.xlsx", sheet="Sheet1") %>%
+  select(statcode=`Gemeentecode`, opheffingsnorm= `Instandhoudingsnorm`, gemeente='Gemeentenaam')  %>% mutate(
+    opheffingsnorm=as.numeric(opheffingsnorm))
+
+opheffings_norm_dubbel <- read_excel("../data_files/opheffingsnorm_po.xlsx", sheet="Sheet2") %>%
+  select(gemeente='Naam gemeente', opheffingsnorm_1="Opheffingsnorm1", opheffingsnorm_2="Opheffingsnorm2")  %>% mutate(
+    opheffingsnorm_1=as.numeric(opheffingsnorm_1),
+    opheffingsnorm_2=as.numeric(opheffingsnorm_2))
+
+statcode_from_gm_nummer = function(x) if(is.finite(x)) paste0('GM', paste(rep('0', 4-nchar(x)), collapse = ''), x) else NA
+
+opheffings_norm$statcode = sapply(opheffings_norm$statcode, statcode_from_gm_nummer)
+opheffings_norm = opheffings_norm %>% left_join(opheffings_norm_dubbel, by = "gemeente") %>% select(statcode, opheffingsnorm, opheffingsnorm_1, opheffingsnorm_2) %>% group_by(statcode) %>%mutate(
+  opheffingsnorm_1 = sum(opheffingsnorm, opheffingsnorm_1, na.rm = T),
+  opheffingsnorm_2 = sum(opheffingsnorm, opheffingsnorm_2, na.rm = T)
+)
+
+baos_2019_opheffingsnorm_1 = baos_2019 %>% left_join(opheffings_norm, by = "statcode") %>% filter(leerlingen < opheffingsnorm_1) %>% select(brin, naam_school, gemeente, pc6, bevoegd_gezag, kleine_schooltoeslag, leerlingen, opheffingsnorm, opheffingsnorm_1, opheffingsnorm_2)
+
+baos_2019_opheffingsnorm_2 = baos_2019 %>% left_join(opheffings_norm, by = "statcode") %>% filter(leerlingen < opheffingsnorm_2) %>% select(brin, naam_school, gemeente, pc6, bevoegd_gezag, kleine_schooltoeslag, leerlingen, opheffingsnorm, opheffingsnorm_1, opheffingsnorm_2)
+
+kst_norm1 =sum(baos_2019_opheffingsnorm_1$kleine_schooltoeslag, na.rm=T)
+kst_norm2 =sum(baos_2019_opheffingsnorm_2$kleine_schooltoeslag, na.rm=T)
+kst_totaal = sum(baos_2019$kleine_schooltoeslag, na.rm=T)
+
+(0.5*(kst_norm1+kst_norm2))/kst_totaal
+
+```
+
