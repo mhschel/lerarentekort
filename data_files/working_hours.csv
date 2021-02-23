@@ -1,0 +1,201 @@
+﻿"COUNTRY","Country","YEAR","Year","ISC11","ISCED 2011","INDICATOR","Indicator","Unit Code","Unit","PowerCode Code","PowerCode","Reference Period Code","Reference Period","Value","Flag Codes","Flags"
+"AUS","Australia","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,862.45697,,
+"AUS","Australia","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,865.2686,,
+"AUT","Austria","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,779.4,,
+"AUT","Austria","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,779.4,,
+"BFL","Flemish Comm. (Belgium)","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,748.47222,,
+"BFL","Flemish Comm. (Belgium)","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,739.02778,,
+"BFR","French Comm. (Belgium)","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,716,,
+"BFR","French Comm. (Belgium)","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,716,,
+"CAN","Canada","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,797.7713,,
+"CAN","Canada","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,797.7713,,
+"CHE","Switzerland","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,817,,
+"CHE","Switzerland","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,784.75,,
+"CHL","Chile","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,1158.43054,,
+"CHL","Chile","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,1063.55521,,
+"CZE","Czech Republic","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,617.1,,
+"CZE","Czech Republic","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,617.1,,
+"DEU","Germany","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,801.54522,,
+"DEU","Germany","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,800.53659,,
+"DNK","Denmark","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"z","Not applicable"
+"DNK","Denmark","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"z","Not applicable"
+"ENG","England (UK)","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"z","Not applicable"
+"ENG","England (UK)","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"z","Not applicable"
+"ESP","Spain","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,880,,
+"ESP","Spain","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,880,,
+"EST","Estonia","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,584.8,,
+"EST","Estonia","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,584.8,,
+"FIN","Finland","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,680.4,,
+"FIN","Finland","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,673.2,,
+"FRA","France","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,900,,
+"FRA","France","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,900,,
+"GRC","Greece","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,660,"b","Series break"
+"GRC","Greece","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,660,,
+"HUN","Hungary","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,651.6,,
+"HUN","Hungary","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,655.2,,
+"IRL","Ireland","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,915,,
+"IRL","Ireland","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,910,,
+"ISL","Iceland","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,623.88,,
+"ISL","Iceland","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,623.88,,
+"ISR","Israel","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,848.02609,,
+"ISR","Israel","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,843.34742,,
+"ITA","Italy","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,765.6,,
+"ITA","Italy","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,765.6,,
+"JPN","Japan","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,742.0959,,
+"JPN","Japan","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,742.0959,,
+"KOR","Korea","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,657.20642,,
+"KOR","Korea","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,671.13441,,
+"LUX","Luxembourg","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"LUX","Luxembourg","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"LVA","Latvia","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,718.2,,
+"LVA","Latvia","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,1020,,
+"MEX","Mexico","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,800,,
+"MEX","Mexico","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,800,,
+"NLD","Netherlands","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,930,,
+"NLD","Netherlands","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,930,,
+"NOR","Norway","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,741,,
+"NOR","Norway","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,741,,
+"NZL","New Zealand","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,921.6,,
+"NZL","New Zealand","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,921.6,,
+"POL","Poland","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,567,,
+"POL","Poland","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,563.85,,
+"PRT","Portugal","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,742.5,,
+"PRT","Portugal","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,778.5,,
+"SCO","Scotland (UK)","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,855,,
+"SCO","Scotland (UK)","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,855,,
+"SVK","Slovak Republic","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,802.2,,
+"SVK","Slovak Republic","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,793.8,,
+"SVN","Slovenia","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,627,,
+"SVN","Slovenia","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,627,,
+"SWE","Sweden","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"z","Not applicable"
+"SWE","Sweden","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"z","Not applicable"
+"TUR","Turkey","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,720,,
+"TUR","Turkey","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,720,,
+"USA","United States","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,1004.3748,,
+"USA","United States","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"ARG","Argentina","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"ARG","Argentina","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"BRA","Brazil","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"BRA","Brazil","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"CHN","China","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"CHN","China","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"COL","Colombia","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,1000,,
+"COL","Colombia","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,1000,,
+"CRI","Costa Rica","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,1188,,
+"CRI","Costa Rica","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,1188,,
+"IND","India","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"IND","India","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"IDN","Indonesia","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"IDN","Indonesia","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"LTU","Lithuania","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,576,,
+"LTU","Lithuania","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,576,,
+"RUS","Russian Federation","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,561,,
+"RUS","Russian Federation","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,561,,
+"SAU","Saudi Arabia","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"SAU","Saudi Arabia","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"ZAF","South Africa","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"ZAF","South Africa","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"AUS","Australia","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,869.57456,,
+"AUT","Austria","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,779.4,,
+"BFL","Flemish Comm. (Belgium)","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,748.47222,,
+"BFR","French Comm. (Belgium)","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,716,,
+"CAN","Canada","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,797.14341,,
+"CHE","Switzerland","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,784.75,,
+"CHL","Chile","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,1063.47314,,
+"CZE","Czech Republic","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,617.1,,
+"DEU","Germany","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,799.54255,,
+"DNK","Denmark","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"ENG","England (UK)","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"z","Not applicable"
+"ESP","Spain","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,880,,
+"EST","Estonia","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,584.8,,
+"FIN","Finland","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,676.8,,
+"FRA","France","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,900,,
+"GRC","Greece","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,663.75,,
+"HUN","Hungary","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,648,,
+"IRL","Ireland","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,905,,
+"ISL","Iceland","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,623.88,,
+"ISR","Israel","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,842.54253,,
+"ITA","Italy","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,754.6,,
+"JPN","Japan","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,739.07925,,
+"KOR","Korea","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,674.64013,,
+"LUX","Luxembourg","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"LVA","Latvia","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,571.6,"b","Series break"
+"MEX","Mexico","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,780,,
+"NLD","Netherlands","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,930,,
+"NOR","Norway","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,741,,
+"NZL","New Zealand","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,921.6,,
+"POL","Poland","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,560.7,,
+"PRT","Portugal","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,774,,
+"SCO","Scotland (UK)","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,855,,
+"SVK","Slovak Republic","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,783.1,,
+"SVN","Slovenia","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,627,,
+"SWE","Sweden","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"z","Not applicable"
+"TUR","Turkey","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,720,,
+"USA","United States","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"ARG","Argentina","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"BRA","Brazil","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"CHN","China","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"COL","Colombia","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,940,"b","Series break"
+"CRI","Costa Rica","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,1188,,
+"IND","India","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"IDN","Indonesia","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"LTU","Lithuania","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,612,,
+"RUS","Russian Federation","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"SAU","Saudi Arabia","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"ZAF","South Africa","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"AUS","Australia","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,879.70789,,
+"AUT","Austria","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,792.39,,
+"BFL","Flemish Comm. (Belgium)","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,746.11111,,
+"BFR","French Comm. (Belgium)","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,708,,
+"CAN","Canada","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"CHE","Switzerland","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"CHL","Chile","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,998.82,,
+"CZE","Czech Republic","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,620.4,,
+"DEU","Germany","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,698.48447,"b","Series break"
+"DNK","Denmark","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,718,"b","Series break"
+"ENG","England (UK)","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"z","Not applicable"
+"ESP","Spain","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,871.18652,,
+"EST","Estonia","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,588.2,,
+"FIN","Finland","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,676.8,,
+"FRA","France","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,900,,
+"GRC","Greece","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,660,,
+"HUN","Hungary","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,651.6,,
+"IRL","Ireland","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,905,,
+"ISL","Iceland","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,603.084,,
+"ISR","Israel","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,834.99298,,
+"ITA","Italy","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,765.6,,
+"JPN","Japan","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,747.1275,,
+"KOR","Korea","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,675.60699,,
+"LUX","Luxembourg","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,809.6,,
+"LVA","Latvia","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,571.6,,
+"MEX","Mexico","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,780,,
+"NLD","Netherlands","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,930,,
+"NOR","Norway","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,741,,
+"NZL","New Zealand","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,921.6,,
+"POL","Poland","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,554.4,,
+"PRT","Portugal","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,760.5,,
+"SCO","Scotland (UK)","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,855,,
+"SVK","Slovak Republic","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,733.2,,
+"SVN","Slovenia","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,620.4,,
+"SWE","Sweden","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"z","Not applicable"
+"TUR","Turkey","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,718,,
+"USA","United States","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"OAVG","OECD Average","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,788.87943,,
+"OAVG","OECD Average","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,788.21192,,
+"OAVG","OECD Average","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,773.50137,,
+"OAVG","OECD Average","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,771.64604,,
+"ARG","Argentina","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"BRA","Brazil","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"CHN","China","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"COL","Colombia","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,960,,
+"CRI","Costa Rica","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,1176,,
+"IND","India","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"IDN","Indonesia","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"LTU","Lithuania","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,835.2,"b","Series break"
+"RUS","Russian Federation","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"SAU","Saudi Arabia","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"ZAF","South Africa","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"G20","G20","2016","2016","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"G20","G20","2017","2017","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"G20","G20","2018","2018","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"
+"G20","G20","2019","2019","L1","Primary education (ISCED2011 level 1)","STAT_TEACH_HRS","Statutory net teaching time per school year, in hours (teachers)",,,"0","Units",,,,"m","Missing data"

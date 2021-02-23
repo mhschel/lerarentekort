@@ -1,0 +1,25 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+class_size <- read.csv("../data_files/class_size.csv", sep=",") %>% group_by(Country, Year) %>% summarise(
+  class_size = Value[INDICATOR == "PERS_AVG_CLASS"], 
+  llr = Value[INDICATOR == "PERS_RATIO_INST"]
+)
+
+working_hours <- read.csv("../data_files/working_hours.csv", sep=",") %>% group_by(Country, Year) %>% summarise(
+  werk_uur_instructie = Value
+)
+
+internationaal_data <- working_hours %>% left_join(class_size, by = c("Year", "Country")) %>% filter(Year == 2017)
+```
+
+```{r}
+plot(internationaal_data$llr, internationaal_data$werk_uur_instructie)
+ggplot(internationaal_data, aes(llr, werk_uur_instructie)) + geom_point() + geom_text(label=rownames(internationaal_data))
+ggplot(internationaal_data, aes(class_size, werk_uur_instructie)) + geom_point() + geom_text(label=rownames(internationaal_data))
+
+```
+
