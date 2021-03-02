@@ -176,11 +176,11 @@ head(data_2_drempel)
 ```{r}
 kosten <- function(.data, bonus){
   totaal_onderwijzers = t(.data[,3])
-  drempel_30 = totaal_onderwijzers[1] * bonus
-  drempel_31 = totaal_onderwijzers[2] * bonus
-  drempel_32 = totaal_onderwijzers[3] * bonus
-  drempel_33 = totaal_onderwijzers[4] * bonus
-  drempel_35 = totaal_onderwijzers[5] * bonus
+  drempel_30 = totaal_onderwijzers[1] * bonus * 1.05
+  drempel_31 = totaal_onderwijzers[2] * bonus* 1.05
+  drempel_32 = totaal_onderwijzers[3] * bonus* 1.05
+  drempel_33 = totaal_onderwijzers[4] * bonus* 1.05
+  drempel_35 = totaal_onderwijzers[5] * bonus* 1.05
   return(rbind(drempel_30, drempel_32, drempel_33, drempel_35))
 }
 
@@ -192,16 +192,23 @@ kosten_een = rbind(c(1500, 1750, 2000, 2500, 3000), cbind(kosten(data_1_drempel,
 ```{r}
 kosten2 <- function(.data, bonus1, bonus2){
   totaal_onderwijzers = t(.data[,3])
-  drempel_30_32 = totaal_onderwijzers[9] * bonus1 +totaal_onderwijzers[3] * bonus2
-  drempel_30_33 = totaal_onderwijzers[10] * bonus1 + totaal_onderwijzers[4] * bonus2
-  drempel_30_34 = totaal_onderwijzers[11] * bonus1 + totaal_onderwijzers[5] * bonus2
-  drempel_30_35 = totaal_onderwijzers[12] * bonus1 + totaal_onderwijzers[6] * bonus2
-  drempel_33_35 = totaal_onderwijzers[13] * bonus1 + totaal_onderwijzers[6] * bonus2
-  drempel_33_36 = totaal_onderwijzers[14] * bonus1 + totaal_onderwijzers[7] * bonus2
-  drempel_33_37 = totaal_onderwijzers[15] * bonus1 + totaal_onderwijzers[8] * bonus2
+  drempel_30_32 = totaal_onderwijzers[9]* 1.05 * bonus1 +totaal_onderwijzers[3]* 1.05 * bonus2
+  drempel_30_33 = totaal_onderwijzers[10]* 1.05 * bonus1 + totaal_onderwijzers[4]* 1.05 * bonus2
+  drempel_30_34 = totaal_onderwijzers[11]* 1.05 * bonus1 + totaal_onderwijzers[5]* 1.05 * bonus2
+  drempel_30_35 = totaal_onderwijzers[12]* 1.05 * bonus1 + totaal_onderwijzers[6] * 1.05* bonus2
+  drempel_33_35 = totaal_onderwijzers[13]* 1.05 * bonus1 + totaal_onderwijzers[6]* 1.05 * bonus2
+  drempel_33_36 = totaal_onderwijzers[14]* 1.05 * bonus1 + totaal_onderwijzers[7]* 1.05 * bonus2
+  drempel_33_37 = totaal_onderwijzers[15]* 1.05 * bonus1 + totaal_onderwijzers[8]* 1.05 * bonus2
   return(rbind(drempel_30_32, drempel_30_33, drempel_30_34, drempel_30_35, drempel_33_35, drempel_33_36, drempel_33_37))
 }
 
-kosten_twee = rbind(c(1000, 1250, 1500, 1500, 2000, 2000), c(1500, 1750, 2000, 2500 ,2500, 3000), cbind(kosten2(data_2_drempel, 1000, 1500), kosten2(data_2_drempel, 1250, 1750), kosten2(data_2_drempel, 1500, 2000), kosten2(data_2_drempel, 1500, 2500), kosten2(data_2_drempel, 2000, 2500), kosten2(data_2_drempel, 2000, 3000)))
+kosten_twee = rbind(c(1000, 1250, 1500, 1500, 2000, 2000), c(1500, 1750, 2000, 2500 ,2750, 3000), cbind(kosten2(data_2_drempel, 1000, 1500), kosten2(data_2_drempel, 1250, 1750), kosten2(data_2_drempel, 1500, 2000), kosten2(data_2_drempel, 1500, 2500), kosten2(data_2_drempel, 2000, 2750), kosten2(data_2_drempel, 2000, 3000)))
+```
+
+```{r}
+mean(baos_2019$gem_loonsom, na.rm=T)
+mean(baos_2019$onderwijzers)
+mean(baos_35)
+
 ```
 

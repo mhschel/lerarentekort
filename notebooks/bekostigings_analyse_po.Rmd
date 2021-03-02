@@ -7,23 +7,53 @@ This is an [R Markdown]
 
 #Vermogen scholen 
 ```{r}
-baos_2019_vermogen <- baos_2019 %>% group_by(bevoegd_gezag) %>% summarise(
-    vermogen_bestuur = mean(vermogen),
-    totaal_leerlingen = sum(leerlingen),
-    vermogen_leerling = mean(vermogen)/sum(leerlingen)
-  ) %>% filter(vermogen_leerling >3000)
 
-hist(baos_2019_vermogen$vermogen_leerling[baos_2019_vermogen$vermogen_leerling > 3000])
-head(baos_2019_vermogen)
+besturen_po = read.csv("../data_files/07-besturen-po-totaal.csv", sep=";") %>% select(bevoegd_gezag = "BEVOEGD.GEZAG.NUMMER", denominatie = "DENOMINATIE")
 
-sum(baos_2019_vermogen$vermogen_bestuur) - (2100 * sum(baos_2019_vermogen$totaal_leerlingen))
-mean(baos_2019$vermogen_ll, na.rm=T)
-sum(baos_2019$totaal_bekostiging, na.rm=T)
+bekostiging_bestuur = baos_2019 %>% left_join(besturen_po) %>% group_by(bevoegd_gezag) %>% summarise(
+  bekostiging_bestuur = sum(totaal_bekostiging),
+  vermogen_bestuur = mean(vermogen),
+  drempel_bestuur = 0.10 * bekostiging_bestuur, 
+  bovenmatig_vermogen = vermogen_bestuur - drempel_bestuur,
+  ratio_vermogen_baten = vermogen_bestuur / bekostiging_bestuur,
+  aantal_scholen = n(), 
+  denominatie = denominatie
+) %>% filter(bekostiging_bestuur > 3000000, vermogen_bestuur > drempel_bestuur)
 
+bekostiging_bestuur_klein = baos_2019 %>% left_join(besturen_po) %>% group_by(bevoegd_gezag) %>% summarise(
+  bekostiging_bestuur = sum(totaal_bekostiging),
+  vermogen_bestuur = mean(vermogen),
+  drempel_bestuur = 300000, 
+  bovenmatig_vermogen = vermogen_bestuur - drempel_bestuur,
+  ratio_vermogen_baten = vermogen_bestuur / bekostiging_bestuur,
+  aantal_scholen = n(), 
+  denominatie = denominatie
+) %>% filter(bekostiging_bestuur < 3000000, vermogen_bestuur > drempel_bestuur)
+
+sum(bekostiging_bestuur$bovenmatig_vermogen, na.rm=T)
 
 ```
+Scatterplot van de verhouding vermogen/baten en het aantal scholen per bestuur
+```{r}
+hist(bekostiging_bestuur$ratio_vermogen_baten)
+hist(bekostiging_bestuur_klein$ratio_vermogen_baten)
+
+
+ggplot(bekostiging_bestuur, aes(aantal_scholen, ratio_vermogen_baten)) +
+  geom_point() + theme_minimal() + labs(fill = "Aantal scholen") +
+  labs(x = 'Aantal Scholen', y = 'Ratio Vermogen/Baten') + scale_y_continuous(labels = comma) 
+
+ggplot(bekostiging_bestuur_klein, aes(aantal_scholen, ratio_vermogen_baten)) +
+  geom_point() + theme_minimal() + labs(fill = "Aantal scholen") +
+  labs(x = 'Aantal Scholen', y = 'Ratio Vermogen/Baten') + scale_y_continuous(labels = comma) 
+
+ggplot(bekostiging_bestuur, aes(x=denominatie, y=vermogen_bestuur)) + geom_violin(fill="grey80") + theme_minimal() +xlab("") + ylab("Vermogen") +theme(axis.text = element_text(angle=90))
+```
+
+
 
 # Kleine scholen toeslag 
+Inladen van de opheffingsnormen 
 ```{r}
 library(readxl)
 opheffings_norm <- read_excel("../data_files/opheffingsnorm_po.xlsx", sheet="Sheet1") %>%
@@ -42,16 +72,30 @@ opheffings_norm = opheffings_norm %>% left_join(opheffings_norm_dubbel, by = "ge
   opheffingsnorm_1 = sum(opheffingsnorm, opheffingsnorm_1, na.rm = T),
   opheffingsnorm_2 = sum(opheffingsnorm, opheffingsnorm_2, na.rm = T)
 )
+```
+
+Dataset op basis van de hoge opheffingsnorm, lage opheffings norm en een arbitraire opheffingsnorm. 
+```{r}
+opheffingsnorm_random  = 100
+
+baos_2019_opheffingsnorm_random = baos_2019 %>% left_join(opheffings_norm, by = "statcode") %>% filter(leerlingen < opheffingsnorm_random) %>% select(brin, naam_school, gemeente, pc6, bevoegd_gezag, kleine_schooltoeslag, leerlingen, opheffingsnorm, opheffingsnorm_1, opheffingsnorm_2)
 
 baos_2019_opheffingsnorm_1 = baos_2019 %>% left_join(opheffings_norm, by = "statcode") %>% filter(leerlingen < opheffingsnorm_1) %>% select(brin, naam_school, gemeente, pc6, bevoegd_gezag, kleine_schooltoeslag, leerlingen, opheffingsnorm, opheffingsnorm_1, opheffingsnorm_2)
 
 baos_2019_opheffingsnorm_2 = baos_2019 %>% left_join(opheffings_norm, by = "statcode") %>% filter(leerlingen < opheffingsnorm_2) %>% select(brin, naam_school, gemeente, pc6, bevoegd_gezag, kleine_schooltoeslag, leerlingen, opheffingsnorm, opheffingsnorm_1, opheffingsnorm_2)
 
+```
+
+Ratio kleine scholentoeslag naar scholen onder de opheffingsnorm
+```{r}
 kst_norm1 =sum(baos_2019_opheffingsnorm_1$kleine_schooltoeslag, na.rm=T)
 kst_norm2 =sum(baos_2019_opheffingsnorm_2$kleine_schooltoeslag, na.rm=T)
+kst_normr =sum(baos_2019_opheffingsnorm_random$kleine_schooltoeslag, na.rm=T)
+
 kst_totaal = sum(baos_2019$kleine_schooltoeslag, na.rm=T)
 
 (0.5*(kst_norm1+kst_norm2))/kst_totaal
-
+kst_normr/kst_totaal
+kst_normr
 ```
 
