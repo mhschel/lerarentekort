@@ -23,3 +23,32 @@ ggplot(internationaal_data, aes(class_size, werk_uur_instructie)) + geom_point()
 
 ```
 
+# Pisa Dataset 
+```{r}
+
+reading = read.csv("../data_files/reading.csv") %>% select(
+  land = LOCATION,
+  reading = Value
+)
+math = read.csv("../data_files/mathematics.csv")%>% select(
+  land = LOCATION,
+  math = Value
+)
+sciences = read.csv("../data_files/sciences.csv")%>% select(
+  land = LOCATION,
+  sciences = Value
+)
+
+llr_oecd = read.csv("../data_files/llr_oecd.csv") %>% filter(TIME == 2018) %>% select(
+  land = LOCATION,
+  llr = Value
+)
+
+pisa = reading %>% left_join(math) %>% left_join(sciences) %>% mutate(
+  average_pisa = (reading + math + sciences)/3
+) %>% left_join(llr_oecd)
+
+plot(pisa$llr, pisa$average_pisa)
+
+```
+
