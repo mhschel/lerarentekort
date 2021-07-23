@@ -99,3 +99,38 @@ kst_normr/kst_totaal
 kst_normr
 ```
 
+
+# Lumpsum personele en materiele bekostiging po 
+```{r}
+library(readxl)
+personeel_2019 = read_excel( "../data_files/03-personele-bekostiging-bo-2019-2020.xls") %>% select(
+  brin = Brin,
+  personele_bekostiging = TOTAAL,
+  leerlingen = TOTAAL_AANTAL_LEERLINGEN) %>% mutate(jaar = 2019)
+personeel_2011 = read_excel( "../data_files/03.-personele-bekostiging-bo-2011-2012.xls") %>% select(
+  brin = BRIN_NUMMER,
+  personele_bekostiging = TOTAAL,
+  leerlingen = TOTAAL_AANTAL_LEERLINGEN) %>% mutate(jaar = 2011)
+materieel_2019 = read_excel( "../data_files/01-materiele-instandhouding-bo-2019.xls")  %>% select(
+  brin = Brin,
+  materieel_bekostiging = TOTAAL_MI) %>% mutate(jaar = 2019)
+materieel_2011 = read_excel( "../data_files//01.-materiele-instandhouding-bo-2011.xls")  %>% select(
+  brin = BRIN_NUMMER,
+  materieel_bekostiging = TOTAAL_MI) %>% mutate(jaar = 2011)
+
+personeel = rbind(personeel_2019, personeel_2011)
+materieel = rbind(materieel_2019, materieel_2011)
+
+bekostiging = personeel %>% left_join(materieel, by=c("brin","jaar")) %>% mutate(
+  totaal = materieel_bekostiging + personele_bekostiging,
+  personeel_lumpsum = personele_bekostiging/leerlingen,
+  lumpsum = totaal/leerlingen
+)
+```
+
+Lumpsum per jaar 
+```{r}
+mean((bekostiging %>% filter(jaar==2011))$lumpsum, na.rm=T)
+mean((bekostiging %>% filter(jaar==2019))$lumpsum, na.rm=T)
+```
+
