@@ -165,26 +165,58 @@ baos_jaar = functiemix_school %>% filter(schooltype == 'bao' & ll_lr_ratio > 5 &
     medewerkers_op_salaris = sum(medewerkers_op_salaris)
     )
 
-ggplot(baos_jaar, aes(x = jaar, y = nat_ll_lr_ratio)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() + 
-  coord_cartesian(ylim = c(16, 20)) + scale_x_continuous(breaks=2006:2019) + geom_point() + 
-  ylab('Landelijke Leerling/Leraar Ratio (LLR)')
+baos_jaar_gemeente = functiemix_school %>% filter(schooltype == 'bao' & ll_lr_ratio > 5 & ll_lr_ratio < 50) %>%
+  group_by(gemeente,jaar) %>% 
+  summarise(
+    ll_lr_ratio = sum(leerlingen) / sum(onderwijzers), 
+    leerlingen = sum(leerlingen), 
+    onderwijzers = sum(onderwijzers), 
+    managers = sum(managers),
+    ondersteunend_personeel = sum(ondersteunend_personeel),
+    schools = n(),
+    medewerkers = sum(medewerkers),
+    medewerkers_op_salaris = sum(medewerkers_op_salaris)
+    ) %>% filter(
+      gemeente %in% c('AMSTERDAM', 'UTRECHT', 'ROTTERDAM', "'S-GRAVENHAGE"))
+
+ggplot(baos_jaar, aes(x = jaar, y = nat_ll_lr_ratio)) + 
+    geom_line(size = 1.2, colour='grey80') + theme_minimal() + 
+    #coord_cartesian(ylim = c(16, 20)) + 
+    scale_x_continuous(breaks=2006:2019) + 
+    geom_point() + 
+    ylab('Landelijke Leerling/Leraar Ratio (LLR)')  + 
+  geom_line(data=baos_jaar_gemeente, aes(x= jaar, y = ll_lr_ratio, colour= gemeente))
+
+
 ggplot(baos_jaar, aes(x = jaar, y = leerlingen)) + geom_line(size = 1.2, colour='grey80') + theme_minimal()+ geom_point() + 
   ylab('Landelijk totaal aantal leerlingen') + scale_x_continuous(breaks=2006:2019)
+
 ggplot(baos_jaar, aes(x = jaar, y = schools)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() + coord_cartesian(ylim = c(6000, 6500))+geom_point() + ylab('Landelijke totaal aantal scholen')+ scale_x_continuous(breaks=2006:2019)
+
+ggplot(baos_jaar, aes(x = jaar, y = onderwijzers)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() + coord_cartesian()+geom_point() + ylab('Landelijke totaal aantal onderwijzers')+ scale_x_continuous(breaks=2006:2019)
+
 ggplot(baos_jaar, aes(x = jaar, y = leerlingen / managers)) + geom_line(size = 1.2, colour='grey80') + theme_minimal()+  geom_point() + 
   ylab('Landelijke Leerling/Managers Ratio')+ scale_x_continuous(breaks=2006:2019)
+
 ggplot(baos_jaar, aes(x = jaar, y = ondersteunend_personeel / schools)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() + geom_point() + 
   ylab('Landelijke Ondersteunend personeel/scholen Ratio ')+ scale_x_continuous(breaks=2006:2019)
+
 ggplot(baos_jaar, aes(x = jaar, y = medewerkers / leerlingen)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() + geom_point() + 
   ylab('Landelijke Medewerkers/Leerlingen Ratio')+ scale_x_continuous(breaks=2006:2019)
+
 ggplot(baos_jaar, aes(x = jaar, y = medewerkers_op_salaris / medewerkers)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() +geom_point() + 
   ylab('Landelijke Medewerkers op salaris/Medewerkers Ratio ')+ scale_x_continuous(breaks=2006:2019)
+
 ggplot(baos_jaar, aes(x = jaar, y = leerlingen / medewerkers)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() +geom_point() + 
   ylab('Landelijke Leerling/Medewerkers Ratio')+ scale_x_continuous(breaks=2006:2019)
+
 ggplot(baos_jaar, aes(x = jaar, y = ondersteunend_personeel / leerlingen)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() +geom_point() + 
   ylab('Landelijke Ondersteunend personeel/Leerling Ratio')+ scale_x_continuous(breaks=2006:2019) + scale_y_continuous(labels = c("1 op 167","1 op 143","1 op 125", "1 op 111","1 op 100"))
 
 ggplot(baos_jaar, aes(x = jaar, y = leerlingen / ondersteunend_personeel)) + geom_line(size = 1.2, colour='grey80') + theme_minimal() +geom_point() + 
+  ylab('Landelijke Ondersteunend personeel/Leerling Ratio')+ scale_x_continuous(breaks=2006:2019)
+
+ggplot(baos_jaar, aes(x = jaar, y = leerlingen / (ondersteunend_personeel + onderwijzers))) + geom_line(size = 1.2, colour='grey80') + theme_minimal() +geom_point() + 
   ylab('Landelijke Ondersteunend personeel/Leerling Ratio')+ scale_x_continuous(breaks=2006:2019)
 ```
 Uit deze grafieken blijkt dat het leerlingenaantal sterk is afgenomen in de afgelopen decennium. Daarnaast valt op dat de verhouding tussen het aantal leerlingen en managers juist sterk is toegenomen. Daarnaast zien we een toename in ondersteunend personeel op scholen vanaf 2014. 
@@ -213,7 +245,7 @@ data %>%
   ggplot() +
   geom_sf(aes(fill = mean_gewogen_llr)) +
   scale_fill_viridis_c() +
-  labs(title = "Gemiddelde Gewogen Leerling/Leraar Ratio (per gemeente)", fill = "") +
+  labs(title = "Gewogen Leerling/Leraar Ratio (per gemeente)", fill = "") +
   theme_void()
 
 ggplot(data) +
@@ -243,12 +275,12 @@ data %>%
   theme_void()
 ```
 
-Op bovenstaande kaartje zien we de variantie per gemeente. De schaal wordt echter gedomineerd door uitschieters: gemeentes met zeer grote en kleine groepen. Daarnaast kan het gemeentelijke gemiddelde gedreven worden door uitschieters. Tenslotte zijn we meer geinteresseerd in scholen met hoge ratios dan lage ratios. Daarom maken we een kaart van Nederland waarop de fractie van scholen met ratio's boven het landelijke gemiddelde per gemeente zichbaar is.
+Op bovenstaande kaartje zien we de variantie per gemeente. De schaal wordt echter gedomineerd door uitschieters: gemeentes met zeer grote en kleine groepen. Daarnaast kan het gemeentelijke gemiddelde gedreven worden door uitschieters. Tenslotte zijn we meer geinteresseerd in scholen met hoge ratios dan lage ratios. Daarom maken we een kaart van Nederland waarop de fractie van scholen met ratio's boven het landelijke gemiddelde per gemeente zichtbaar is.
 
 ```{r}
 ggplot(data) +
   geom_sf(aes(fill = perc_high_gewogen_llr)) +
-  labs(title = "% scholen met bovengemiddelde gewogen leerling/leraar ratios (per gemeente)") +
+  labs(title = "% scholen met bovengemiddelde gewogen LLR (per gemeente)") +
   scale_fill_continuous(type = "viridis") + labs(fill = "% scholen") +
   theme_void()
 
@@ -458,7 +490,7 @@ In bovenstaande analyse komt  de verdeling tussen gemeentes aan bod. Het merende
 baos_2019 %>% filter(
   gemeente %in% c('AMSTERDAM', 'ROERMOND', 'UTRECHT', 'ROTTERDAM', "'S-GRAVENHAGE", 'ALMERE', 'ZWOLLE'),
   gewogen_llr > 0, gewogen_llr < 30)  %>% ggplot(aes(x = fct_reorder(gemeente, gewogen_llr, mean), y = gewogen_llr)) + geom_violin(fill='grey80') +
- theme_minimal() + xlab('') + ylab('LLR')
+ theme_minimal() + xlab('') + ylab('LLR') + stat_summary(fun.y=mean, geom="point", size=2, color="blue")
 
 ```
 
