@@ -13,7 +13,7 @@ sort_means_table = function(.data, sort_var) {
 
   .data %>% as_tibble() %>%
     arrange({{sort_var}}) %>%
-    select(statnaam, mean_ll_lr_ratio, mean_weighted_ll_lr_ratio, perc_high_ll_lr_ratio, perc_high_weighted_ll_lr_ratio)
+    select(statnaam, mean_ll_lr_ratio, mean_gewogen_llr, perc_high_ll_lr_ratio, perc_high_gewogen_llr)
 
 }
 

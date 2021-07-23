@@ -17,14 +17,11 @@ join_means_tables = function(means_data_earlier, means_data_later) {
       change_avg_school_size_cut = cut(change_avg_school_size, breaks = quantile(change_avg_school_size, na.rm = T)),
       change_ll_lr_ratio = mean_ll_lr_ratio.y - mean_ll_lr_ratio.x,
       change_ll_lr_ratio_cut = cut(change_ll_lr_ratio, breaks = quantile(change_ll_lr_ratio, na.rm = T)),
-      change_weighted_ll_lr_ratio = mean_weighted_ll_lr_ratio.y - mean_weighted_ll_lr_ratio.x,
-      change_weighted_ll_lr_ratio_cut = cut(change_weighted_ll_lr_ratio, breaks = quantile(change_weighted_ll_lr_ratio, na.rm = T))
+
     ) %>% select(
       statcode,
       change_ll_lr_ratio,
       change_ll_lr_ratio_cut,
-      change_weighted_ll_lr_ratio,
-      change_weighted_ll_lr_ratio_cut,
       change_avg_school_size,
       ll_lr_ratio_2019 = mean_ll_lr_ratio.y,
       ll_lr_ratio_2009 = mean_ll_lr_ratio.x)
