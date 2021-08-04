@@ -1,18 +1,16 @@
-Package: tekortindicator
-Title: What the Package Does (One Line, Title Case)
+Package: lerarentekort
+Title: data en analyse over het lerarentekort
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
+    person(given = "Schellekens",
            family = "Last",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+           email = "m.h.schellekens@minfin.nl")
+License: `use_mit_license()`
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports:
   dplyr
+  tidyverse
