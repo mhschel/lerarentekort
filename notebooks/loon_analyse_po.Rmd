@@ -194,6 +194,7 @@ Bovenstaande figuren indiceren geen verband tussen de gemiddelde loonsom en het 
 
 # Inzage salarisdifferentiatie 
 Om de salarisdifferentiatie van leraren beter in beeld te brengen, hebben we het gemiddelde salaris gecorrigeerd voor leeftijd en het percentage leraren in schaal 11 en 12. Uit de histogram van de gecorrigeerde gemiddelde loonsom komt naar voren dat er weinig salarisdifferentiatie plaatsvindt. 
+
 ```{r}
 salaris_model <- lm(data=schaal_data, gem_loonsom~leeftijd+percentage_11_12)
 
